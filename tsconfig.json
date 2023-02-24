@@ -1,0 +1,31 @@
+{
+  "files": ["src/server.ts"],
+  "include": ["src/**/*.ts"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "target": "es2021",
+    "lib": ["es2021"],
+    "outDir": "dist",
+    "rootDir": "",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "removeComments": true,
+    "typeRoots": ["node_modules/@types"],
+    "baseUrl": "src",
+    "paths": {
+      "services/*": ["services/*"],
+      "routes/*": ["routes/*"],
+      "enums/*": ["enums/*"],
+      "models/*": ["models/*"],
+      "lib/*": ["lib/*"],
+      "src/*": ["*"],
+      "*": ["../node_modules/@types/*", "types/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}

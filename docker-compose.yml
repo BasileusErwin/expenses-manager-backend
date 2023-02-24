@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: expenses
+    volumes:
+      - ./.postgres:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  expenses:
+    build: .
+    container_name: expenses-backend
+    working_dir: /app
+    env_file: ./.env
+    volumes:
+      - .:/app
+    ports:
+      - $PORT:$PORT
+    depends_on:
+      - postgres
+    command: sh -c "yarn dev"
