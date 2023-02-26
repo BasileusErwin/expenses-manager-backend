@@ -1,1 +1,1 @@
-export { PasswordUtil } from './password.util'
+export { PasswordUtil } from './password.util';

@@ -1,6 +1,4 @@
-import { PasswordUtil } from '../../../utils';
-
-interface BodyRequest {
+export interface BodyRequest {
   email: string;
   firstName: string;
   lastName: string;

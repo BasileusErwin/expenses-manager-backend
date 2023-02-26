@@ -2,7 +2,6 @@ import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize
 import { TransactionType, CurrencyEnum } from '../enums';
 import { CategoryModel, UserModel } from '.';
 
-
 @Table({ modelName: 'transactions', paranoid: true })
 export class TransactionModel extends Model<TransactionModel> {
   @Column({
@@ -18,16 +17,16 @@ export class TransactionModel extends Model<TransactionModel> {
   public type: TransactionType;
 
   @Column({ allowNull: false })
-  public amount: number
+  public amount: number;
 
   @Column({ allowNull: false })
-  public date: Date
+  public date: Date;
 
   @Column({ allowNull: false })
-  public currency: CurrencyEnum
+  public currency: CurrencyEnum;
 
   @Column({ allowNull: false })
-  public note: string
+  public note: string;
 
   @Column
   public deletedAt: Date;

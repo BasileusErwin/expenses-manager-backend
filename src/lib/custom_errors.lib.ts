@@ -87,5 +87,4 @@ customErrors[ApiError.User.USER_ALREADY_EXISTS] = {
   HTTPStatusCode: 409,
 };
 
-
 export { customErrors };

@@ -33,7 +33,7 @@ export const sequelize = () => {
     },
     logging: (str) => {
       if (!['PROD'].includes(config.env)) {
-        logger.debug(str)
+        logger.debug(str);
       }
     },
     models,

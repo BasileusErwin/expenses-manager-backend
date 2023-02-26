@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { SessionModel,TransactionModel } from '.';
+import { SessionModel, TransactionModel } from '.';
 
 @Table({
   modelName: 'users',
