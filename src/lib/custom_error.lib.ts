@@ -1,4 +1,4 @@
-import { customErrors, logger } from '.';
+import { customErrors } from '.';
 
 export class CustomError<T extends object> extends Error {
   public errorCode: number;
@@ -11,5 +11,6 @@ export class CustomError<T extends object> extends Error {
     this.data = data;
     this.message = customErrors[errorCode].message;
     this.statusCode = customErrors[errorCode].HTTPStatusCode;
+    this.errorCode = errorCode;
   }
 }
