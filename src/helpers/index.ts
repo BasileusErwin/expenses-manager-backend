@@ -1,1 +1,1 @@
-export { validationHelper } from './validation.helper'
+export { validationHelper } from './validation.helper';

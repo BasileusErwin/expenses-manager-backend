@@ -1,1 +1,1 @@
-export { userValidation } from './user.validation'
+export { userValidation } from './user.validation';

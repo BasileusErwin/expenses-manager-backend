@@ -2,7 +2,7 @@ import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { TransactionType } from '../enums';
 import { TransactionModel } from '.';
 
-@Table({ modelName: 'transactions', paranoid: true })
+@Table({ modelName: 'categories', paranoid: true })
 export class CategoryModel extends Model<CategoryModel> {
   @Column({
     allowNull: false,

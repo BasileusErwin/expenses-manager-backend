@@ -1,14 +1,7 @@
-import {
-  BelongsTo,
-  Column,
-  DataType,
-  ForeignKey,
-  Model,
-  Table
-} from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { UserModel } from '.';
 
-@Table({ modelName: 'session', paranoid: true })
+@Table({ modelName: 'sessions', paranoid: true })
 export class SessionModel extends Model<SessionModel> {
   @Column({
     allowNull: false,

@@ -1,10 +1,10 @@
 import { Router } from 'express';
+import { authRouter } from './auth.route';
 import { userRouter } from './user.route';
-//import { middlewareRouter } from './middleware';
 
 const router: Router = Router();
 
-//router.use('/', middlewareRouter);
 router.use('/users', userRouter);
+router.use('/auth', authRouter);
 
 export const routerIndex: Router = router;

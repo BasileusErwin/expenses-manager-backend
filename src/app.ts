@@ -1,5 +1,5 @@
-import express from 'express';
-import { Request, Response, NextFunction } from 'express-serve-static-core';
+import express, { NextFunction } from 'express';
+import { Request, Response } from 'express-serve-static-core';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';

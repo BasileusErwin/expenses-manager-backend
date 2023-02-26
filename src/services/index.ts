@@ -1,3 +1,2 @@
-import { UserService as UserServiceClass } from './user.service';
-
-export const UserService = new UserServiceClass;
+export { UserService } from './user.service';
+export { AuthService } from './auth.service';
