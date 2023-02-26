@@ -1,20 +1,23 @@
 export namespace ApiError {
   export enum Auth {
-    EXPIRED_TOKEN = 1000,
+    GENERIC = 1000,
+    EXPIRED_TOKEN,
     BAD_AUTH,
     UNAUTHORIZED,
-    USER_ALREADY_EXISTS,
     BAD_EMAIL_FORMAT,
   }
 
   export enum Server {
-    TOO_FEW_PARAMS = 2000,
+    GENERIC = 2000,
+    TOO_FEW_PARAMS,
     PARAMS_REQUIRED,
   }
 
   export enum User {
-    USER_DOES_NOT_EXIST = 3000,
+    GENERIC = 3000,
+    USER_DOES_NOT_EXIST,
     WRONG_PASSWORD,
     PASSWORD_TOO_SHORT,
+    USER_ALREADY_EXISTS,
   }
 }

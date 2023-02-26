@@ -2,7 +2,7 @@ import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
 import { SessionModel,TransactionModel } from '.';
 
 @Table({
-  modelName: 'user',
+  modelName: 'users',
   paranoid: true,
 })
 export class UserModel extends Model<UserModel> {

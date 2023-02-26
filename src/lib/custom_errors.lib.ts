@@ -21,15 +21,6 @@ customErrors[ApiError.Auth.UNAUTHORIZED] = {
   HTTPStatusCode: 401,
 };
 
-customErrors[ApiError.Auth.USER_ALREADY_EXISTS] = {
-  message: 'User already exists',
-  showMessage: {
-    EN: 'User already exists',
-    ES: 'El usuario ya existe',
-  },
-  HTTPStatusCode: 409,
-};
-
 customErrors[ApiError.Auth.BAD_EMAIL_FORMAT] = {
   message: 'Bad email format',
   showMessage: {
@@ -86,5 +77,15 @@ customErrors[ApiError.User.PASSWORD_TOO_SHORT] = {
   },
   HTTPStatusCode: 400,
 };
+
+customErrors[ApiError.User.USER_ALREADY_EXISTS] = {
+  message: 'User already exists',
+  showMessage: {
+    EN: 'User already exists',
+    ES: 'El usuario ya existe',
+  },
+  HTTPStatusCode: 409,
+};
+
 
 export { customErrors };

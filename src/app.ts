@@ -13,7 +13,7 @@ import helmet from 'helmet';
 // Error handler
 const exceptionMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof CustomError) {
-    logger.error({ err }, 'api_error');
+    logger.error({ err }, 'Exception Middleware');
     const httpStatus = customErrors[err.errorCode] && customErrors[err.errorCode].HTTPStatusCode;
     return res.status(httpStatus || 500).send(new CustomResponse(false, err.data, err.errorCode));
   }
