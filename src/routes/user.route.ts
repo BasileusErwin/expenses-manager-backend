@@ -9,4 +9,6 @@ const userController: UserController = new UserController();
 
 router.route('/signup').post(userValidation.registerUser, userController.createUser);
 
+router.route('/').get(userController.getUserById);
+
 export const userRouter: Router = router;

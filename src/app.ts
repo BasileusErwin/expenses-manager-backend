@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { config } from './config';
 import { routerIndex } from './routes';
 import { sequelize } from './models';
+import { ApiError } from './enums';
 import { customErrors, CustomError, CustomResponse, logger } from './lib';
 import helmet from 'helmet';
 
@@ -64,8 +65,9 @@ export class App {
   private configureRoutes() {
     this.server.use('/api', routerIndex);
     this.server.use((req: Request, res: Response) => {
+      const customError = customErrors[ApiError.Server.NOT_FOUND];
       res.status(404);
-      res.send(new CustomResponse(false));
+      res.send(new CustomResponse(false, customError));
     });
     this.server.use(exceptionMiddleware);
   }

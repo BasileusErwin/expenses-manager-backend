@@ -49,6 +49,15 @@ customErrors[ApiError.Server.TOO_FEW_PARAMS] = {
   HTTPStatusCode: 400,
 };
 
+customErrors[ApiError.Server.NOT_FOUND] = {
+  message: 'Not found',
+  showMessage: {
+    EN: 'Not found',
+    ES: 'Recurso no encontrado',
+  },
+  HTTPStatusCode: 404,
+};
+
 // User
 
 customErrors[ApiError.User.USER_DOES_NOT_EXIST] = {
