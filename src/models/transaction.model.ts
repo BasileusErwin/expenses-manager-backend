@@ -42,7 +42,7 @@ export class TransactionModel extends Model<TransactionModel> {
   @Column
   public categoryId: string;
 
-  @BelongsTo(() => CategoryModel, 'category_id')
+  @BelongsTo(() => CategoryModel)
   public category: CategoryModel;
 }
 

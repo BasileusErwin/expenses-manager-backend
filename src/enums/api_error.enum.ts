@@ -11,6 +11,7 @@ export namespace ApiError {
     GENERIC = 2000,
     TOO_FEW_PARAMS,
     PARAMS_REQUIRED,
+    NOT_FOUND,
   }
 
   export enum User {
