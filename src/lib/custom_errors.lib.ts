@@ -96,4 +96,23 @@ customErrors[ApiError.User.USER_ALREADY_EXISTS] = {
   HTTPStatusCode: 409,
 };
 
+// Transaction
+customErrors[ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE] = {
+  message: 'Transaction and category are not of the same type.',
+  showMessage: {
+    EN: 'Transaction and category are not of the same type.',
+    ES: 'La transacción y la categoría no son del mismo tipo.',
+  },
+  HTTPStatusCode: 409,
+};
+
+customErrors[ApiError.Transaction.TRANSACTION_NOT_EXIST] = {
+  message: 'Transaction not exist',
+  showMessage: {
+    EN: 'Transaction not exist',
+    ES: 'La transacción no existe',
+  },
+  HTTPStatusCode: 400,
+};
+
 export { customErrors };

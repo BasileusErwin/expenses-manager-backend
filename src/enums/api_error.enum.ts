@@ -21,4 +21,10 @@ export namespace ApiError {
     PASSWORD_TOO_SHORT,
     USER_ALREADY_EXISTS,
   }
+
+  export enum Transaction {
+    GENERIC = 4000,
+    TRANSACTION_NOT_EXIST,
+    TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE,
+  }
 }
