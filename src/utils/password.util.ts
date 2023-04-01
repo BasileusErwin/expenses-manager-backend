@@ -7,6 +7,6 @@ export class PasswordUtil {
   }
 
   public static async comparePassword(hashedPassword: string, password: string) {
-    return !password || !hashedPassword ? false : bcrypt.compare(password, hashedPassword);
+    return !(password && hashedPassword) ? false : bcrypt.compare(password, hashedPassword);
   }
 }

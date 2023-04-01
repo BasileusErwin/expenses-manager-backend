@@ -19,13 +19,13 @@ export class MiddlewareService {
       return next();
     }
 
-    const user: UserDTO = await this.userService.getUserByFilter({}, [
+    const user: UserDTO = await this.userService.getUser({}, [
       {
         model: SessionModel,
         where: {
-          token
-        }
-      }
+          token,
+        },
+      },
     ]);
 
     if (!user) {

@@ -14,6 +14,7 @@ export const logger = pino({
   serializers: {
     // Needed because errors don't get serialized when using nestedKey
     /* eslint-disable */
+    // rome-ignore lint/suspicious/noExplicitAny: default
     data: (data: any | Error) => {
       if (data instanceof Error) {
         return { err: pino.stdSerializers.err(data) };

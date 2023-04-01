@@ -11,7 +11,7 @@ import { ApiError } from './enums';
 import { customErrors, CustomError, CustomResponse, logger } from './lib';
 import helmet from 'helmet';
 
-// Error handler
+// rome-ignore lint/suspicious/noExplicitAny: default
 const exceptionMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof CustomError) {
     logger.error({ err }, 'Exception Middleware');

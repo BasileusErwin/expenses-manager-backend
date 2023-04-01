@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+ROME="node_modules/.bin/rome check"
+STAGED_FILES=$(fd '.ts' {src,test})
+PASS=true
+
+if [[ "$STAGED_FILES" == "" ]]; then
+  exit 0
+fi
+
+for FILE in $STAGED_FILES
+do
+  $ROME "$FILE"
+
+  if [[ "$?" == 0 ]]; then
+    echo -e "\e[34;1m==>\e[0m \e[32;1m[Rome Passed]:\e[0m $FILE"
+  else
+    echo -e "\e[34;1m=>\e[0m \e[31;1m[Rome Failed]:\e[0m $FILE"
+    PASS=false
+  fi
+done
+
+if ! "$PASS"; then
+  echo -e "\n\e[34;1m=> \e[31;1m[COMMIT FAILED]:\e[0m Rome failed on staged files. Please check your code and try again. You can run Rome manually via 'yarn lint'. \n"
+  exit 1 # exit with failure status
+else
+  echo -e "\e[34;1m==> \e[32;1mCOMMIT SUCCEEDED\e[0m\n"
+fi
+
+exit "$?"
+
+

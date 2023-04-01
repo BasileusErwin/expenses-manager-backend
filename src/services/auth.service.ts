@@ -15,7 +15,7 @@ export class AuthService {
 
   public async login(email: string, password: string): Promise<{ token: string; user: UserDTO }> {
     logger.info(`Login email: ${email}`);
-    const user: UserDTO = await this.userService.getUserByFilter({ email });
+    const user: UserDTO = await this.userService.getUser({ email });
 
     if (!user) {
       logger.error('User does not exist');
