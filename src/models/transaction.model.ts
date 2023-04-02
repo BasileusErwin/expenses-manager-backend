@@ -25,7 +25,7 @@ export class TransactionModel extends Model<TransactionModel> {
   @Column({ allowNull: false })
   public currency: CurrencyEnum;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: true })
   public note: string;
 
   @Column

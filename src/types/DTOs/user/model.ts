@@ -22,8 +22,10 @@ export class UserDTO {
   readonly deletedAt: Date;
 
   @Type(() => SessionDTO)
+  @Expose()
   readonly sessions: SessionDTO[];
 
   @Type(() => TransactionDTO)
+  @Expose()
   readonly trasactions: TransactionDTO[];
 }

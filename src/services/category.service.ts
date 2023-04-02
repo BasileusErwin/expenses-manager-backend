@@ -1,6 +1,6 @@
 import { plainToInstance } from 'class-transformer';
 import { CategoryModel, sequelize } from '../models';
-import { Transaction } from 'sequelize/types';
+import { IncludeOptions, Transaction, WhereOptions } from 'sequelize/types';
 import { CategoryDTO } from 'src/types/DTOs';
 import { CreateCategoryRequest } from 'src/types/request/category';
 
@@ -10,7 +10,11 @@ interface Opt {
 }
 
 export class CategoryService {
-  public async getCategory(where: any, include: any[] = [], opt: Opt = null): Promise<CategoryDTO> {
+  public async getCategory(
+    where: WhereOptions<CategoryModel>,
+    include: IncludeOptions[] = [],
+    opt: Opt = null,
+  ): Promise<CategoryDTO> {
     if (!opt?.transaction) {
       opt.transaction = await sequelize().transaction();
     }
@@ -43,7 +47,7 @@ export class CategoryService {
 
     try {
       const category = await CategoryModel.create(newCategory, {
-        transaction: opt.transaction
+        transaction: opt.transaction,
       });
 
       if (opt?.commit) {

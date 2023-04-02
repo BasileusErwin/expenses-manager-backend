@@ -1,10 +1,11 @@
-import { sequelize, TransactionModel } from '../models';
+import { CategoryModel, sequelize, TransactionModel } from '../models';
 import { CreateTransactionRequest } from '../types/request/trsactions';
 import { CategoryDTO, TransactionDTO } from '../types/DTOs';
 import { CategoryService } from './category.service';
-import { CustomError } from '../lib';
+import { CustomError, logger } from '../lib';
 import { ApiError } from '../enums';
 import { plainToInstance } from 'class-transformer';
+import { IncludeOptions, WhereOptions } from 'sequelize';
 
 export class TransactionService {
   private categoryService: CategoryService;
@@ -17,7 +18,7 @@ export class TransactionService {
     const transaction = await sequelize().transaction();
     try {
       let category: CategoryDTO;
-      if (!newTransaction.categoryId) {
+      if (newTransaction.categoryId) {
         category = await this.categoryService.getCategory({
           categoryId: newTransaction.categoryId,
           type: newTransaction.type,
@@ -36,7 +37,8 @@ export class TransactionService {
           commit: false,
         });
       }
-      delete newTransaction.category;
+
+      newTransaction.category = null;
 
       newTransaction.categoryId = category.categoryId;
 
@@ -62,5 +64,33 @@ export class TransactionService {
       await transaction.rollback();
       throw err;
     }
+  }
+
+  public async getAllTrasactions(
+    where: WhereOptions<TransactionModel>,
+    include: IncludeOptions[] = [],
+  ): Promise<TransactionDTO[]> {
+    const trasactions = await TransactionModel.findAll({
+      where,
+      include,
+    });
+
+    logger.debug({
+      trasactions,
+    });
+
+    return plainToInstance(TransactionDTO, trasactions);
+  }
+
+  public async getTrasaction(
+    where: WhereOptions<TransactionModel>,
+    include: IncludeOptions[] = [],
+  ): Promise<TransactionDTO> {
+    const trasaction = await TransactionModel.findOne({
+      where,
+      include,
+    });
+
+    return plainToInstance(TransactionDTO, trasaction);
   }
 }

@@ -39,6 +39,15 @@ customErrors[ApiError.Auth.EXPIRED_TOKEN] = {
   HTTPStatusCode: 401,
 };
 
+customErrors[ApiError.Auth.NEED_BE_LOGGED_IN] = {
+  message: 'You need to be logged in',
+  showMessage: {
+    EN: 'You need to be logged in',
+    ES: 'Debe estar conectado',
+  },
+  HTTPStatusCode: 400,
+};
+
 // Server
 customErrors[ApiError.Server.TOO_FEW_PARAMS] = {
   message: 'Too few parameters',
@@ -56,6 +65,15 @@ customErrors[ApiError.Server.NOT_FOUND] = {
     ES: 'Recurso no encontrado',
   },
   HTTPStatusCode: 404,
+};
+
+customErrors[ApiError.Server.PARAMS_REQUIRED] = {
+  message: 'Some body parameters are missing or are incorrect',
+  showMessage: {
+    EN: 'Some body parameters are missing or are incorrect',
+    ES: 'Faltan o son incorrectos algunos parametros de la solicitud',
+  },
+  HTTPStatusCode: 400,
 };
 
 // User

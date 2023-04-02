@@ -23,9 +23,7 @@ export class CategoryModel extends Model<CategoryModel> {
   })
   public value: string;
 
-  @Column({
-    allowNull: false,
-  })
+  @Column({ allowNull: true })
   public note: string;
 
   @HasMany(() => TransactionModel, 'category_id')

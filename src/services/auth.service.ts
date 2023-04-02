@@ -1,10 +1,10 @@
-import { randomBytes } from 'crypto';
-import { ApiError } from '../enums';
-import { UserDTO } from '../types/DTOs';
-import { CustomError, logger } from '../lib';
-import { PasswordUtil } from '../utils';
-import { SessionModel } from '../models';
 import { UserService } from '.';
+import { ApiError } from '../enums';
+import { CustomError, logger } from '../lib';
+import { SessionModel, UserModel } from '../models';
+import { UserDTO } from '../types/DTOs';
+import { PasswordUtil } from '../utils';
+import { randomBytes } from 'crypto';
 
 export class AuthService {
   private userService: UserService;
@@ -47,5 +47,13 @@ export class AuthService {
     });
 
     return { token, user };
+  }
+
+  public async logout(token: string) {
+    await SessionModel.destroy({
+      where: {
+        token,
+      },
+    });
   }
 }

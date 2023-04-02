@@ -21,4 +21,16 @@ export class AuthController {
       next(err);
     }
   }
+
+  public async logout(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { token } = req.cookies;
+
+      await authService.logout(token);
+
+      return res.send(new CustomResponse(true));
+    } catch (err) {
+      next(err);
+    }
+  }
 }

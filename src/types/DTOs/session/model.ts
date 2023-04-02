@@ -16,5 +16,6 @@ export class SessionDTO {
   readonly userId: string;
 
   @Type(() => UserDTO)
+  @Expose()
   readonly user: UserDTO;
 }

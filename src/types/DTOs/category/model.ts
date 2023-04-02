@@ -17,5 +17,6 @@ export class CategoryDTO {
   readonly note: string;
 
   @Type(() => TransactionDTO)
+  @Expose()
   readonly trasactions: TransactionDTO[];
 }

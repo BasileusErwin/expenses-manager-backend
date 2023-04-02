@@ -29,11 +29,13 @@ export class TransactionDTO {
   readonly userId: string;
 
   @Type(() => UserDTO)
+  @Expose()
   readonly user: UserDTO;
 
   @Expose()
   readonly categoryId: string;
 
   @Type(() => CategoryDTO)
+  @Expose()
   readonly category: CategoryDTO;
 }

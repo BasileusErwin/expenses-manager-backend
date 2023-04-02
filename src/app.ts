@@ -11,8 +11,7 @@ import { ApiError } from './enums';
 import { customErrors, CustomError, CustomResponse, logger } from './lib';
 import helmet from 'helmet';
 
-// rome-ignore lint/suspicious/noExplicitAny: default
-const exceptionMiddleware = (err: any, req: Request, res: Response, next: NextFunction) => {
+const exceptionMiddleware = <T extends Error>(err: T, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof CustomError) {
     logger.error({ err }, 'Exception Middleware');
     const httpStatus = customErrors[err.errorCode] && customErrors[err.errorCode].HTTPStatusCode;
@@ -64,7 +63,7 @@ export class App {
 
   private configureRoutes() {
     this.server.use('/api', routerIndex);
-    this.server.use((req: Request, res: Response) => {
+    this.server.use((_req: Request, res: Response) => {
       const customError = customErrors[ApiError.Server.NOT_FOUND];
       res.status(404);
       res.send(new CustomResponse(false, customError));

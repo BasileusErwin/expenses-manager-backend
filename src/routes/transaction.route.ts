@@ -1,17 +1,21 @@
-/* eslint-disable @typescript-eslint/no-misused-promises,@typescript-eslint/unbound-method */
 import { Router } from 'express';
-import { TransactionController } from '../controllers';
-import { TransactionValidation } from '../validations';
+import { MiddlewareController, TransactionController } from '../controllers';
+import { transactionValidation } from '../validations';
 
 const router: Router = Router();
 
 const transactionController: TransactionController = new TransactionController();
+const middlewareController: MiddlewareController = new MiddlewareController();
 
 router
   .route('/')
-  .get(transactionController.getAllTransactionsByUserId)
-  .post(transactionValidation.createTransaction, transactionController.createTransaction);
+  .get(middlewareController.onlyLogin, transactionController.getAllTransactionsByUserId)
+  .post(
+    middlewareController.onlyLogin,
+    transactionValidation.createTransaction,
+    transactionController.createTransaction,
+  );
 
-router.route('/:transactionId').get(transactionController.getAllTransactionsByUserId);
+router.route('/:transactionId').get(transactionController.getTransactionById);
 
 export const transactionRouter: Router = router;

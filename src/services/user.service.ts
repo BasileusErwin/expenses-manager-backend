@@ -1,10 +1,10 @@
-import { plainToInstance } from 'class-transformer';
-import { UserModel } from '../models';
-import { PasswordUtil } from '../utils';
 import { ApiError } from '../enums';
 import { CustomError } from '../lib';
+import { UserModel } from '../models';
 import { UserDTO } from '../types/DTOs';
 import { RegisterUserRequest } from '../types/request/user';
+import { PasswordUtil } from '../utils';
+import { plainToInstance } from 'class-transformer';
 import { IncludeOptions, WhereOptions } from 'sequelize';
 
 export class UserService {

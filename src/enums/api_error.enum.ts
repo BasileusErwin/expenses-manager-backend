@@ -5,6 +5,7 @@ export namespace ApiError {
     BAD_AUTH,
     UNAUTHORIZED,
     BAD_EMAIL_FORMAT,
+    NEED_BE_LOGGED_IN,
   }
 
   export enum Server {

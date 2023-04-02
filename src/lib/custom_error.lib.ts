@@ -1,4 +1,4 @@
-import { customErrors } from '.';
+import { customErrors, logger } from '.';
 
 export class CustomError<T extends object> extends Error {
   public errorCode: number;

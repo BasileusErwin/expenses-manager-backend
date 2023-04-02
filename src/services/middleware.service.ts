@@ -1,38 +1,44 @@
-import { NextFunction, Request, Response } from 'express';
-import { SessionModel } from '../models';
-import { UserService } from '.';
-import { CustomError } from '../lib';
 import { ApiError } from '../enums';
-import { UserDTO } from '../types/DTOs';
+import { CustomError, logger } from '../lib';
+import { SessionModel, UserModel } from '../models';
+import { NextFunction, Request, Response } from 'express';
 
 export class MiddlewareService {
-  private userService: UserService;
+  public onlyLogin(_req: Request, res: Response, next: NextFunction) {
+    if (!res.locals.userId) {
+      throw new CustomError(ApiError.Auth.NEED_BE_LOGGED_IN);
+    }
 
-  constructor() {
-    this.userService = new UserService();
+    return next();
   }
 
   public async authorization(req: Request, res: Response, next: NextFunction) {
     const { token } = req.cookies;
 
+    logger.debug({ token });
+
     if (!token) {
       return next();
     }
 
-    const user: UserDTO = await this.userService.getUser({}, [
-      {
-        model: SessionModel,
-        where: {
-          token,
-        },
+    const session: SessionModel = await SessionModel.findOne({
+      where: {
+        token,
       },
-    ]);
+      include: [
+        {
+          model: UserModel,
+        },
+      ],
+    });
 
-    if (!user) {
+    logger.debug({ session });
+
+    if (!session?.user) {
       throw new CustomError(ApiError.Auth.EXPIRED_TOKEN);
     }
 
-    res.locals.userId = user.userId;
+    res.locals.userId = session.userId;
 
     next();
   }

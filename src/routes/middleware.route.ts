@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises,@typescript-eslint/unbound-method */
 import { Router } from 'express';
 import { MiddlewareController } from '../controllers';
 
