@@ -1,4 +1,4 @@
-import { logger } from 'lib/logger.lib';
+import { logger } from '../lib';
 import { Sequelize } from 'sequelize-typescript';
 import { config } from '../config';
 

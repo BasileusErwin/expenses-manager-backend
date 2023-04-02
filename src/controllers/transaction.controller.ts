@@ -5,7 +5,7 @@ import { BodyRequest, CreateTransactionRequest } from '../types/request/trsactio
 import { NextFunction, Request, Response } from 'express';
 import { TransactionDTO } from '../types/DTOs';
 import { CategoryModel } from '../models';
-import { ApiError } from 'enums/api_error.enum';
+import { ApiError } from '../enums';
 
 const transactionService: TransactionService = new TransactionService();
 

@@ -1,7 +1,7 @@
 import { UserService } from '.';
 import { ApiError } from '../enums';
 import { CustomError, logger } from '../lib';
-import { SessionModel, UserModel } from '../models';
+import { SessionModel } from '../models';
 import { UserDTO } from '../types/DTOs';
 import { PasswordUtil } from '../utils';
 import { randomBytes } from 'crypto';

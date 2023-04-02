@@ -1,8 +1,8 @@
 import { plainToInstance } from 'class-transformer';
 import { CategoryModel, sequelize } from '../models';
-import { IncludeOptions, Transaction, WhereOptions } from 'sequelize/types';
-import { CategoryDTO } from 'src/types/DTOs';
-import { CreateCategoryRequest } from 'src/types/request/category';
+import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
+import { CategoryDTO } from '../types/DTOs';
+import { CreateCategoryRequest } from '../types/request/category';
 
 interface Opt {
   transaction?: Transaction;

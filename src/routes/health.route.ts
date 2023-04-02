@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { CustomResponse } from 'lib/custom_response.lib';
+import { CustomResponse } from '../lib';
 
 const router: Router = Router();
 
