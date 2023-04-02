@@ -7,8 +7,8 @@
     "build": "rm -rf dist/ && tsc",
     "dev": "nodemon",
     "start": "NODE_PATH=dist/src/ node dist/src/server.js",
-    "lint": "rome check src/**/*.ts",
-    "format": "rome format --write src/**/*.ts"
+    "lint": "yarn rome check src/**/*.ts",
+    "format": "yarn rome format --write src/**/*.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
