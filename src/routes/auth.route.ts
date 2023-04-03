@@ -1,11 +1,8 @@
 import { Router } from 'express';
-import { AuthController, MiddlewareController } from '../controllers';
+import { authController, middlewareController } from '../controllers';
 import { userValidation } from '../validations';
 
 const router: Router = Router();
-
-const authController: AuthController = new AuthController();
-const middlewareController: MiddlewareController = new MiddlewareController();
 
 router.route('/login').post(userValidation.registerUser, authController.login);
 

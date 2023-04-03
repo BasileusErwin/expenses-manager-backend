@@ -1,11 +1,8 @@
 import { Router } from 'express';
-import { MiddlewareController, UserController } from '../controllers';
+import { middlewareController, userController } from '../controllers';
 import { userValidation } from '../validations';
 
 const router: Router = Router();
-
-const userController: UserController = new UserController();
-const middlewareController: MiddlewareController = new MiddlewareController();
 
 router
   .route('/')

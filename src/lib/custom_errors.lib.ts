@@ -130,6 +130,26 @@ customErrors[ApiError.Transaction.TRANSACTION_NOT_EXIST] = {
     EN: 'Transaction not exist',
     ES: 'La transacción no existe',
   },
+  HTTPStatusCode: 404,
+};
+
+// category
+//
+customErrors[ApiError.Category.CATEGORY_NOT_EXIST] = {
+  message: 'Category not exist',
+  showMessage: {
+    EN: 'Category not exist',
+    ES: 'La transacción no existe',
+  },
+  HTTPStatusCode: 404,
+};
+
+customErrors[ApiError.Category.CANNOT_DELETE_CATEGORY_TRASACTIONS] = {
+  message: 'Cannot delete a category with trasactions',
+  showMessage: {
+    EN: 'Cannot delete a category with trasactions, try with the query `?deleteTransactions=true` to delete all transactions.',
+    ES: 'No se puede eliminar una categoría con transacciones, pruebe con la query `?deleteTransactions=true` para eliminar todas las transacciones',
+  },
   HTTPStatusCode: 400,
 };
 

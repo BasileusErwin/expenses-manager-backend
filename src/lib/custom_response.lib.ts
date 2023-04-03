@@ -1,7 +1,7 @@
 import { ShowMessage } from '../types/generic';
 import { customErrors } from '.';
 
-export class CustomResponse<T extends object> {
+export class CustomResponse<T extends object | string> {
   public data: T;
   public result: boolean;
   public message: string;

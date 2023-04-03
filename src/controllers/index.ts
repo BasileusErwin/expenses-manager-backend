@@ -1,4 +1,5 @@
-export { UserController } from './user.controller';
-export { AuthController } from './auth.controller';
-export { MiddlewareController } from './middleware.controller';
-export { TransactionController } from './transaction.controller';
+export { userController } from './user.controller';
+export { authController } from './auth.controller';
+export { middlewareController } from './middleware.controller';
+export { transactionController } from './transaction.controller';
+export { categoryController } from './category.controller';

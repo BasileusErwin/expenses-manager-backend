@@ -7,23 +7,26 @@ import { PasswordUtil } from '../utils';
 import { plainToInstance } from 'class-transformer';
 import { IncludeOptions, WhereOptions } from 'sequelize';
 
-export class UserService {
-  public async getUser(where: WhereOptions<UserModel>, include: IncludeOptions[] = []): Promise<UserDTO> {
-    return await UserModel.findOne({
-      where,
-      include,
-    });
-  }
-
-  public async createUser(newUser: RegisterUserRequest): Promise<UserDTO> {
-    if (await this.getUser({ email: newUser.email })) {
-      throw new CustomError(ApiError.User.USER_ALREADY_EXISTS);
-    }
-
-    newUser.password = await PasswordUtil.hashPassword(newUser.password);
-
-    const user = await UserModel.create(newUser);
-
-    return plainToInstance(UserDTO, user);
-  }
+async function getUser(where: WhereOptions<UserModel>, include: IncludeOptions[] = []): Promise<UserDTO> {
+  return await UserModel.findOne({
+    where,
+    include,
+  });
 }
+
+async function createUser(newUser: RegisterUserRequest): Promise<UserDTO> {
+  if (await getUser({ email: newUser.email })) {
+    throw new CustomError(ApiError.User.USER_ALREADY_EXISTS);
+  }
+
+  newUser.password = await PasswordUtil.hashPassword(newUser.password);
+
+  const user = await UserModel.create(newUser);
+
+  return plainToInstance(UserDTO, user);
+}
+
+export const userService = {
+  getUser,
+  createUser,
+};

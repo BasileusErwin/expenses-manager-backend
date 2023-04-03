@@ -1,22 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
-import { MiddlewareService } from '../services';
+import { middlewareService } from '../services';
 
-const middlewareService: MiddlewareService = new MiddlewareService();
-
-export class MiddlewareController {
-  public async authorization(req: Request, res: Response, next: NextFunction) {
-    try {
-      await middlewareService.authorization(req, res, next);
-    } catch (err) {
-      next(err);
-    }
-  }
-
-  public onlyLogin(req: Request, res: Response, next: NextFunction) {
-    try {
-      middlewareService.onlyLogin(req, res, next);
-    } catch (err) {
-      next(err);
-    }
+async function authorization(req: Request, res: Response, next: NextFunction) {
+  try {
+    await middlewareService.authorization(req, res, next);
+  } catch (err) {
+    next(err);
   }
 }
+
+function onlyLogin(req: Request, res: Response, next: NextFunction) {
+  try {
+    middlewareService.onlyLogin(req, res, next);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export const middlewareController = {
+  onlyLogin,
+  authorization,
+};

@@ -28,4 +28,10 @@ export namespace ApiError {
     TRANSACTION_NOT_EXIST,
     TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE,
   }
+
+  export enum Category {
+    GENERIC = 5000,
+    CATEGORY_NOT_EXIST,
+    CANNOT_DELETE_CATEGORY_TRASACTIONS,
+  }
 }

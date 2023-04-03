@@ -1,5 +1,5 @@
-export { UserService } from './user.service';
-export { AuthService } from './auth.service';
-export { MiddlewareService } from './middleware.service';
-export { TransactionService } from './transactions.service';
-export { CategoryService } from './category.service';
+export { userService } from './user.service';
+export { authService } from './auth.service';
+export { middlewareService } from './middleware.service';
+export { transactionService } from './transactions.service';
+export { categoryService } from './category.service';
