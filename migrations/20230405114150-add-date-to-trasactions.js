@@ -23,11 +23,11 @@ module.exports = {
           'NOVEMBER',
           'DECEMBER',
         ],
-        allowNull: false,
+        allowNull: true,
       }),
       await queryInterface.addColumn('transactions', 'year', {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
       }),
     ]);
   },
