@@ -1,6 +1,6 @@
-import { Exclude, Expose, Type } from 'class-transformer';
-import { CurrencyEnum, TransactionType } from '../../../enums/index';
-import { CategoryDTO, UserDTO } from '..';
+import { Exclude, Expose, Type } from "class-transformer";
+import { CurrencyEnum, MonthEnum, TransactionType } from "../../../enums";
+import { CategoryDTO, UserDTO } from "..";
 
 @Exclude()
 export class TransactionDTO {
@@ -14,13 +14,19 @@ export class TransactionDTO {
   readonly amount: number;
 
   @Expose()
-  readonly date: Date;
-
-  @Expose()
   readonly currency: CurrencyEnum;
 
   @Expose()
   readonly note: string;
+
+  @Expose()
+  readonly day: number;
+
+  @Expose()
+  readonly month: MonthEnum;
+
+  @Expose()
+  readonly year: number;
 
   @Expose()
   readonly deletedAt: Date;

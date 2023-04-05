@@ -1,5 +1,5 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
-import { TransactionType, CurrencyEnum } from '../enums';
+import { TransactionType, CurrencyEnum, MonthEnum } from '../enums';
 import { CategoryModel, UserModel } from '.';
 
 @Table({ modelName: 'transactions', paranoid: true })
@@ -20,13 +20,25 @@ export class TransactionModel extends Model<TransactionModel> {
   public amount: number;
 
   @Column({ allowNull: false })
-  public date: Date;
-
-  @Column({ allowNull: false })
   public currency: CurrencyEnum;
 
   @Column({ allowNull: true })
   public note: string;
+
+  @Column({
+    allowNull: true,
+  })
+  public day: number;
+
+  @Column({
+    allowNull: false,
+  })
+  public month: MonthEnum;
+
+  @Column({
+    allowNull: false,
+  })
+  public year: number;
 
   @Column
   public deletedAt: Date;

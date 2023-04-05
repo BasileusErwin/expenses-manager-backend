@@ -7,7 +7,7 @@ const router: Router = Router();
 router
   .route('/')
   .all(middlewareController.onlyLogin)
-  .get(transactionController.getAllTransactionsByUserId)
+  .get(transactionValidation.getTransaction, transactionController.getAllTransactionsByUserId)
   .post(transactionValidation.createTransaction, transactionController.createTransaction);
 
 router

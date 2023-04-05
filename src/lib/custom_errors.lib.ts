@@ -134,7 +134,6 @@ customErrors[ApiError.Transaction.TRANSACTION_NOT_EXIST] = {
 };
 
 // category
-//
 customErrors[ApiError.Category.CATEGORY_NOT_EXIST] = {
   message: 'Category not exist',
   showMessage: {

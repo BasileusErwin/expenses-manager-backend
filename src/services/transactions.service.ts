@@ -47,13 +47,18 @@ async function createTransaction(newTransaction: CreateTransactionRequest): Prom
       {
         type: newTransaction.type,
         amount: newTransaction.amount,
-        date: newTransaction.date,
+        day: newTransaction.day,
+        month: newTransaction.month,
+        year: newTransaction.year,
         currency: newTransaction.currency,
         note: newTransaction.note,
         userId: newTransaction.userId,
         categoryId: newTransaction.categoryId,
       },
       {
+        include: [{
+          model: CategoryModel,
+        }],
         transaction,
       },
     );

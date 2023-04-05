@@ -1,11 +1,12 @@
+import { ApiError, MonthEnum } from '../enums';
 import { validationHelper } from '../helpers';
 import { CustomError, CustomResponse } from '../lib';
+import { CategoryModel, TransactionModel } from '../models';
 import { transactionService } from '../services';
+import { TransactionDTO } from '../types/DTOs';
 import { BodyRequest, CreateTransactionRequest } from '../types/request/trsactions';
 import { NextFunction, Request, Response } from 'express';
-import { TransactionDTO } from '../types/DTOs';
-import { CategoryModel } from '../models';
-import { ApiError } from '../enums';
+import { WhereOptions } from 'sequelize';
 
 async function createTransaction(req: Request, res: Response, next: NextFunction) {
   try {
@@ -52,20 +53,38 @@ async function getTransactionById(req: Request, res: Response, next: NextFunctio
   }
 }
 
-async function getAllTransactionsByUserId(_req: Request, res: Response, next: NextFunction) {
+async function getAllTransactionsByUserId(req: Request, res: Response, next: NextFunction) {
   try {
-    const { userId } = res.locals;
+    validationHelper.checkValidation(req);
 
-    const transactions: TransactionDTO[] = await transactionService.getAllTrasactions(
+    const { userId } = res.locals;
+    const { day, month, year } = req.query;
+
+    const where: WhereOptions<TransactionModel> = {
+      userId,
+    };
+
+    if (month) {
+      where.month = month as MonthEnum;
+    }
+
+    if (day) {
+      where.day = +day;
+    }
+
+    if (year) {
+      where.year = +year;
+    }
+
+    const transactions: TransactionDTO[] = await transactionService.getAllTrasactions(where, [
       {
-        userId,
+        model: CategoryModel,
       },
-      [
-        {
-          model: CategoryModel,
-        },
-      ],
-    );
+    ]);
+
+    if (!transactions) {
+      throw new CustomError(ApiError.Transaction.TRANSACTION_NOT_EXIST);
+    }
 
     res.send(new CustomResponse(true, transactions));
   } catch (err) {
