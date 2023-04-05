@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ROME="node_modules/.bin/rome check"
-STAGED_FILES=$(fd '.ts' {src,test})
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMTR | grep -E '(.ts)$')
 PASS=true
 
 if [[ "$STAGED_FILES" == "" ]]; then
