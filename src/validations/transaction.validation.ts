@@ -1,6 +1,7 @@
 import { CurrencyEnum, MonthEnum, TransactionType } from '../enums';
 import { dayHelper } from '../helpers';
 import { body, query } from 'express-validator';
+import { logger } from 'lib/logger.lib';
 
 const createTransaction = [
   body('type', 'Please enter a type').notEmpty().trim(),
@@ -9,67 +10,39 @@ const createTransaction = [
   body('note', 'Please enter a note').optional().notEmpty().trim(),
   body('day', 'Please enter a day')
     .optional()
-    .isNumeric({ no_symbols: true })
+    .isInt({ min: 1, max: 31 })
     .custom((value: number, { req }) => value > 0 && value <= dayHelper.getMaxDayByMonth(req.body.month))
     .trim(),
   body('month', 'Please enter a month').isIn(Object.values(MonthEnum)).trim(),
-  body('year', 'Please enter a year')
-    .isNumeric()
-    .custom((value: number, _) => value.toString().length === 4)
-    .trim(),
-  body('categoryId', 'Please enter a categoryId or category')
-    .custom((value: string, { req }) => {
-      if (req.body.category) {
-        return true;
-      }
-
-      if (!(value || req.body.category)) {
-        return false;
-      }
-
-      return true;
-    })
-    .trim(),
-  body('category', 'Please enter a categoryId or category')
-    .custom((value: string, { req }) => {
-      if (req.body.categoryId) {
-        return true;
-      }
-
-      if (!(value || req.body.categoryId)) {
-        return false;
-      }
-
-      return true;
-    })
-    .isObject(),
+  body('year', 'Please enter a year').isInt({ min: 2000 }).trim(),
+  body('categoryId', 'Please enter a categoryId or category').if(body('category').not().exists()).isUUID(),
+  body('category', 'Please enter a categoryId or category').if(body('categoryId').not().exists()).isObject(),
   body('category.type', 'Please enter a category type, and make it equal to the transaction type.')
-    .notEmpty()
+    .if(body('category').exists())
     .isIn(Object.values(TransactionType))
     .custom((value: TransactionType, { req }) => value === req.body.type),
   body('category.value', 'Please enter a category type, and make it equal to the transaction type.')
-    .notEmpty()
+    .if(body('category').exists())
     .isString()
     .trim(),
-  body('category.note', 'Please enter a category note').notEmpty().isString().trim(),
+  body('category.note', 'Please enter a category note')
+    .optional()
+    .if(body('category').exists())
+    .isString()
+    .trim(),
 ];
 
 const getTransaction = [
   query('month').optional().isIn(Object.values(MonthEnum)),
   query('day')
     .optional()
-    .isNumeric()
+    .isInt({ min: 1, max: 31 })
     .custom((value, { req }) => {
       if (req.body?.month) {
         return value > 0 && value <= dayHelper.getMaxDayByMonth(req.body.month);
       }
-
-      return value > 0 && value <= 31;
     }),
-  query('year')
-    .optional()
-    .isNumeric()
-    .custom((value, _) => value.toString().length === 4),
+  query('year').optional().isInt({ min: 2000 }),
 ];
 
 export const transactionValidation = {

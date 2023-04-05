@@ -20,10 +20,14 @@ async function createTransaction(newTransaction: CreateTransactionRequest): Prom
   try {
     let category: CategoryDTO;
     if (newTransaction.categoryId) {
-      category = await categoryService.getCategory({
-        categoryId: newTransaction.categoryId,
-        type: newTransaction.type,
-      });
+      category = await categoryService.getCategory(
+        {
+          categoryId: newTransaction.categoryId,
+          type: newTransaction.type,
+        },
+        [],
+        { transaction },
+      );
 
       if (category.type !== newTransaction.type) {
         throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
