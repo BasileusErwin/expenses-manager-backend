@@ -56,9 +56,11 @@ async function createTransaction(newTransaction: CreateTransactionRequest): Prom
         categoryId: newTransaction.categoryId,
       },
       {
-        include: [{
-          model: CategoryModel,
-        }],
+        include: [
+          {
+            model: CategoryModel,
+          },
+        ],
         transaction,
       },
     );
