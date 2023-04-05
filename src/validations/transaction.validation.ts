@@ -21,17 +21,20 @@ const createTransaction = [
     .custom((value: string, { req }) => value || req.body.category)
     .trim(),
   body('category', 'Please enter a categoryId or category')
-    .custom((value: string, { req }) => (value || req.body.categoryId))
+    .custom((value: string, { req }) => value || req.body.categoryId)
     .isObject(),
   body('category.type', 'Please enter a category type, and make it equal to the transaction type.')
-    .optional()
+    .custom((value: string, { req }) => value && req.body.category)
     .isIn(Object.values(TransactionType))
     .custom((value: TransactionType, { req }) => value === req.body.type),
   body('category.value', 'Please enter a category type, and make it equal to the transaction type.')
-    .optional()
+    .custom((value: string, { req }) => value && req.body.category)
     .isString()
     .trim(),
-  body('category.note', 'Please enter a category note').optional().isString().trim(),
+  body('category.note', 'Please enter a category note')
+    .custom((value: string, { req }) => value && req.body.category)
+    .isString()
+    .trim(),
 ];
 
 const getTransaction = [
