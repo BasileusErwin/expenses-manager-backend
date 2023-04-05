@@ -3,10 +3,6 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     return Promise.all([
-      await queryInterface.addColumn('transactions', 'day', {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-      }),
       await queryInterface.addColumn('transactions', 'month', {
         type: Sequelize.ENUM(),
         values: [
@@ -26,6 +22,10 @@ module.exports = {
         allowNull: true,
       }),
       await queryInterface.addColumn('transactions', 'year', {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      }),
+      await queryInterface.addColumn('transactions', 'day', {
         type: Sequelize.INTEGER,
         allowNull: true,
       }),
