@@ -18,16 +18,10 @@ const createTransaction = [
     .custom((value: number, _) => value.toString().length === 4)
     .trim(),
   body('categoryId', 'Please enter a categoryId or category')
-    .custom((value: string, { req }) => !value && req.body.category)
+    .custom((value: string, { req }) => value || req.body.category)
     .trim(),
   body('category', 'Please enter a categoryId or category')
-    .custom((value: string, { req }) => {
-      if (value && !req.body.categoryId) {
-        return true;
-      }
-
-      return false;
-    })
+    .custom((value: string, { req }) => (value || req.body.categoryId))
     .isObject(),
   body('category.type', 'Please enter a category type, and make it equal to the transaction type.')
     .optional()
