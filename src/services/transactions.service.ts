@@ -1,11 +1,11 @@
-import { CategoryModel, sequelize, TransactionModel } from '../models';
-import { CreateTransactionRequest } from '../types/request/trsactions';
-import { CategoryDTO, TransactionDTO } from '../types/DTOs';
-import { categoryService } from '.';
-import { CustomError, logger } from '../lib';
-import { ApiError } from '../enums';
-import { plainToInstance } from 'class-transformer';
-import { IncludeOptions, WhereOptions } from 'sequelize';
+import { CategoryModel, sequelize, TransactionModel } from "../models";
+import { CreateTransactionRequest } from "../types/request/trsactions";
+import { CategoryDTO, TransactionDTO } from "../types/DTOs";
+import { categoryService } from ".";
+import { CustomError, logger } from "../lib";
+import { ApiError } from "../enums";
+import { plainToInstance } from "class-transformer";
+import { IncludeOptions, Transaction, WhereOptions } from "sequelize";
 
 async function deleteTransaction(transactionId: string) {
   await TransactionModel.destroy({
@@ -15,8 +15,45 @@ async function deleteTransaction(transactionId: string) {
   });
 }
 
-async function createTransaction(newTransaction: CreateTransactionRequest): Promise<TransactionDTO> {
+async function createTransactionByType(
+  newTransaction: CreateTransactionRequest | CreateTransactionRequest[],
+): Promise<TransactionDTO | TransactionDTO[]> {
   const transaction = await sequelize().transaction();
+  try {
+    if (Array.isArray(newTransaction)) {
+      let transactionCreated: TransactionDTO[] = [];
+
+      for (const transactionData of newTransaction) {
+        const data = await createTransaction(
+          transactionData,
+          transaction,
+          false,
+        );
+
+        transactionCreated.push(data);
+      }
+
+      await transaction.commit();
+
+      return transactionCreated;
+    } else {
+      return await createTransaction(newTransaction);
+    }
+  } catch (err) {
+    transaction.rollback();
+    throw err;
+  }
+}
+
+async function createTransaction(
+  newTransaction: CreateTransactionRequest,
+  transaction: Transaction = undefined,
+  commit: boolean = true,
+): Promise<TransactionDTO> {
+  if (!transaction) {
+    transaction = await sequelize().transaction();
+  }
+
   try {
     let category: CategoryDTO;
     if (newTransaction.categoryId) {
@@ -30,11 +67,15 @@ async function createTransaction(newTransaction: CreateTransactionRequest): Prom
       );
 
       if (category.type !== newTransaction.type) {
-        throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
+        throw new CustomError(
+          ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE,
+        );
       }
     } else {
       if (newTransaction.category.type !== newTransaction.type) {
-        throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
+        throw new CustomError(
+          ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE,
+        );
       }
 
       category = await categoryService.createCategory(newTransaction.category, {
@@ -69,11 +110,15 @@ async function createTransaction(newTransaction: CreateTransactionRequest): Prom
       },
     );
 
-    await transaction.commit();
+    if (commit) {
+      await transaction.commit();
+    }
 
     return plainToInstance(TransactionDTO, transactionCreated);
   } catch (err) {
-    await transaction.rollback();
+    if (commit) {
+      await transaction.rollback();
+    }
     throw err;
   }
 }
@@ -111,4 +156,5 @@ export const transactionService = {
   createTransaction,
   getTrasaction,
   getAllTrasactions,
+  createTransactionByType,
 };
