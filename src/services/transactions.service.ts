@@ -61,10 +61,15 @@ async function createTransaction(
         {
           categoryId: newTransaction.categoryId,
           type: newTransaction.type,
+          userId: newTransaction.userId,
         },
         [],
         { transaction },
       );
+
+      if (!category) {
+        throw new CustomError(ApiError.Category.CATEGORY_NOT_EXIST);
+      }
 
       if (category.type !== newTransaction.type) {
         throw new CustomError(
@@ -78,10 +83,16 @@ async function createTransaction(
         );
       }
 
-      category = await categoryService.createCategory(newTransaction.category, {
-        transaction,
-        commit: false,
-      });
+      category = await categoryService.createCategory(
+        {
+          ...newTransaction.category,
+          userId: newTransaction.userId,
+        },
+        {
+          transaction,
+          commit: false,
+        },
+      );
     }
 
     newTransaction.category = null;

@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { TransactionType } from '../../../enums/index';
-import { TransactionDTO } from '..';
+import { TransactionDTO, UserDTO } from '..';
 
 @Exclude()
 export class CategoryDTO {
@@ -16,7 +16,14 @@ export class CategoryDTO {
   @Expose()
   readonly note: string;
 
+  @Expose()
+  readonly userId: string;
+
   @Type(() => TransactionDTO)
   @Expose()
   readonly trasactions: TransactionDTO[];
+
+  @Type(() => UserDTO)
+  @Expose()
+  readonly user: UserDTO[];
 }

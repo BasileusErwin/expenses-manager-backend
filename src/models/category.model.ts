@@ -1,6 +1,6 @@
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { TransactionModel, UserModel } from '.';
 import { TransactionType } from '../enums';
-import { TransactionModel } from '.';
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from 'sequelize-typescript';
 
 @Table({ modelName: 'categories', paranoid: true })
 export class CategoryModel extends Model<CategoryModel> {
@@ -28,6 +28,13 @@ export class CategoryModel extends Model<CategoryModel> {
 
   @HasMany(() => TransactionModel, 'category_id')
   public trasactions: TransactionModel[];
+
+  @ForeignKey(() => UserModel)
+  @Column
+  public userId: string;
+
+  @BelongsTo(() => UserModel, 'user_id')
+  public user: UserModel;
 }
 
 export default CategoryModel;
