@@ -1,11 +1,11 @@
-import { CategoryModel, sequelize, TransactionModel } from "../models";
-import { CreateTransactionRequest } from "../types/request/trsactions";
-import { CategoryDTO, TransactionDTO } from "../types/DTOs";
-import { categoryService } from ".";
-import { CustomError, logger } from "../lib";
-import { ApiError } from "../enums";
-import { plainToInstance } from "class-transformer";
-import { IncludeOptions, Transaction, WhereOptions } from "sequelize";
+import { CategoryModel, sequelize, TransactionModel } from '../models';
+import { CreateTransactionRequest } from '../types/request/trsactions';
+import { CategoryDTO, TransactionDTO } from '../types/DTOs';
+import { categoryService } from '.';
+import { CustomError, logger } from '../lib';
+import { ApiError } from '../enums';
+import { plainToInstance } from 'class-transformer';
+import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
 
 async function deleteTransaction(transactionId: string) {
   await TransactionModel.destroy({
@@ -24,11 +24,7 @@ async function createTransactionByType(
       let transactionCreated: TransactionDTO[] = [];
 
       for (const transactionData of newTransaction) {
-        const data = await createTransaction(
-          transactionData,
-          transaction,
-          false,
-        );
+        const data = await createTransaction(transactionData, transaction, false);
 
         transactionCreated.push(data);
       }
@@ -72,15 +68,11 @@ async function createTransaction(
       }
 
       if (category.type !== newTransaction.type) {
-        throw new CustomError(
-          ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE,
-        );
+        throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
       }
     } else {
       if (newTransaction.category.type !== newTransaction.type) {
-        throw new CustomError(
-          ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE,
-        );
+        throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
       }
 
       category = await categoryService.createCategory(
