@@ -27,7 +27,7 @@ const createTransaction = [
       (value, { req }) =>
         (req.body.currency === CurrencyEnum.USD || req.body.currency === CurrencyEnum.EUR) && value,
     )
-    .isInt()
+    .isNumeric()
     .trim(),
   body('categoryId', 'Please enter a categoryId or category')
     .if(body('transactions').not().exists())
