@@ -1,10 +1,10 @@
 import { ApiError, MonthEnum } from '../enums';
-import { validationHelper } from '../helpers';
+import { transactionHelper, validationHelper } from '../helpers';
 import { CustomError, CustomResponse, logger } from '../lib';
 import { CategoryModel, TransactionModel } from '../models';
 import { transactionService } from '../services';
 import { TransactionDTO } from '../types/DTOs';
-import { BodyRequest, CreateTransactionRequest } from '../types/request/trsactions';
+import { CreateTransactionRequest } from '../types/request/trsactions';
 import { NextFunction, Request, Response } from 'express';
 import { WhereOptions } from 'sequelize';
 
@@ -23,6 +23,12 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
     const { transactions } = body;
 
     if (Array.isArray(transactions)) {
+      const errors = transactionHelper.createTransactionValidation(transactions);
+
+      if (errors.length) {
+        throw new CustomError(ApiError.Server.PARAMS_REQUIRED, errors);
+      }
+
       newTransaction = transactions.map(
         (value) =>
           new CreateTransactionRequest({

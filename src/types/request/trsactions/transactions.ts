@@ -9,6 +9,7 @@ export interface BodyRequest {
 	year: number;
 	currency: CurrencyEnum;
 	note: string;
+  exchangeRate?: number;
 	userId: string;
 	categoryId?: string;
 	category?: CreateCategoryRequest;
@@ -21,6 +22,7 @@ export class CreateTransactionRequest {
 	readonly month: MonthEnum;
 	readonly year: number;
 	readonly currency: CurrencyEnum;
+	readonly exchangeRate?: number;
 	readonly note: string;
 	readonly userId: string;
 	public categoryId?: string;
@@ -33,6 +35,7 @@ export class CreateTransactionRequest {
 		month,
 		year,
 		currency,
+    exchangeRate,
 		note,
 		userId,
 		categoryId,
@@ -42,6 +45,7 @@ export class CreateTransactionRequest {
 		this.type = type;
 		this.amount = amount;
 		this.currency = currency;
+		this.exchangeRate = exchangeRate;
 		this.userId = userId;
 		this.day = day;
 		this.month = month;

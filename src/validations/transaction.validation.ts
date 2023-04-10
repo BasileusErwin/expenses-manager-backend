@@ -21,6 +21,14 @@ const createTransaction = [
     .isIn(Object.values(MonthEnum))
     .trim(),
   body('year', 'Please enter a year').if(body('transactions').not().exists()).isInt({ min: 2000 }).trim(),
+  body('exchangeRate', 'Please enter a exchangeRate')
+    .if(body('transactions').not().exists())
+    .custom(
+      (value, { req }) =>
+        (req.body.currency === CurrencyEnum.USD || req.body.currency === CurrencyEnum.EUR) && value,
+    )
+    .isInt()
+    .trim(),
   body('categoryId', 'Please enter a categoryId or category')
     .if(body('transactions').not().exists())
     .if(body('category').not().exists())
@@ -33,15 +41,7 @@ const createTransaction = [
     .if(body('category').exists())
     .isIn(Object.values(TransactionType))
     .custom((value: TransactionType, { req }) => value === req.body.type),
-  body('category.value', 'Please enter a category type, and make it equal to the transaction type.')
-    .if(body('category').exists())
-    .isString()
-    .trim(),
-  body('category.note', 'Please enter a category note')
-    .optional()
-    .if(body('category').exists())
-    .isString()
-    .trim(),
+  body('category.value', 'Please enter a value').if(body('category').exists()).isString().trim(),
 ];
 
 const getTransaction = [

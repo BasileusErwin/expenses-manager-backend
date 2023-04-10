@@ -29,6 +29,9 @@ export class TransactionDTO {
   readonly year: number;
 
   @Expose()
+  readonly exchangeRate: number;
+
+  @Expose()
   readonly deletedAt: Date;
 
   @Expose()

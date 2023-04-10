@@ -40,6 +40,11 @@ export class TransactionModel extends Model<TransactionModel> {
   })
   public year: number;
 
+  @Column({
+    allowNull: true,
+  })
+  public exchangeRate: number;
+
   @Column
   public deletedAt: Date;
 

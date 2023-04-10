@@ -102,6 +102,7 @@ async function createTransaction(
         note: newTransaction.note,
         userId: newTransaction.userId,
         categoryId: newTransaction.categoryId,
+        exchangeRate: newTransaction?.exchangeRate,
       },
       {
         include: [
