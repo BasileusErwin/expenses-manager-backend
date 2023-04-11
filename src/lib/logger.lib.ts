@@ -1,15 +1,19 @@
 import pino from 'pino';
 import { config } from '../config';
 
+const transport = ['LOCAL'].includes(config.env)
+  ? {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+    },
+  }
+  : null;
+
 export const logger = pino({
   level: 'trace',
   base: null,
-  transport: {
-    target: 'pino-pretty',
-    options: {
-      colorize: config.env === 'LOCAL',
-    },
-  },
+  transport,
   nestedKey: 'data',
   serializers: {
     // Needed because errors don't get serialized when using nestedKey
