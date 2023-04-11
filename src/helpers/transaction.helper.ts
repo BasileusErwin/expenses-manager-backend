@@ -99,11 +99,11 @@ const createTransactionValidation = (
           });
         }
 
-        if (!transaction.category.value) {
+        if (!transaction.category.name) {
           error.push({
-            msg: 'Please enter a category value.',
-            param: `transactions[${index}].category.value`,
-            value: transaction.category.value,
+            msg: 'Please enter a category name.',
+            param: `transactions[${index}].category.name`,
+            value: transaction.category.name,
           });
         }
       }

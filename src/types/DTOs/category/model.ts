@@ -11,7 +11,7 @@ export class CategoryDTO {
   readonly type: TransactionType;
 
   @Expose()
-  readonly value: string;
+  readonly name: string;
 
   @Expose()
   readonly note: string;

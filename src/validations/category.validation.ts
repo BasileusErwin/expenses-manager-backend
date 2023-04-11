@@ -3,8 +3,8 @@ import { check } from 'express-validator';
 
 const createCategory = [
   check('type', 'Please enter a type').notEmpty().trim().isIn(Object.values(TransactionType)),
-  check('value', 'Please enter a value').isEmail().normalizeEmail(),
-  check('note', 'Please enter a note').notEmpty().trim(),
+  check('name', 'Please enter a name').notEmpty().isString().trim(),
+  check('note', 'Please enter a note').optional().notEmpty().trim(),
 ];
 
 export const categoryValidation = {

@@ -41,7 +41,7 @@ const createTransaction = [
     .if(body('category').exists())
     .isIn(Object.values(TransactionType))
     .custom((value: TransactionType, { req }) => value === req.body.type),
-  body('category.value', 'Please enter a value').if(body('category').exists()).isString().trim(),
+  body('category.name', 'Please enter a name').if(body('category').exists()).isString().trim(),
 ];
 
 const getTransaction = [

@@ -2,19 +2,19 @@ import { TransactionType } from '../../../enums';
 
 export interface BodyRequest {
   type: TransactionType;
-  value: string;
+  name: string;
   note: string;
   userId: string;
 }
 
 export class CreateCategoryRequest {
   readonly type: TransactionType;
-  readonly value: string;
+  readonly name: string;
   readonly note: string;
   readonly userId: string;
 
-  constructor({ type, value, note, userId }: BodyRequest) {
-    this.value = value;
+  constructor({ type, name, note, userId }: BodyRequest) {
+    this.name = name;
     this.type = type;
     this.note = note;
     this.userId = userId;

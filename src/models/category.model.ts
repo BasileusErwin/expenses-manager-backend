@@ -21,7 +21,7 @@ export class CategoryModel extends Model<CategoryModel> {
   @Column({
     allowNull: false,
   })
-  public value: string;
+  public name: string;
 
   @Column({ allowNull: true })
   public note: string;

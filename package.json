@@ -56,6 +56,7 @@
     "rome": "^11.0.0",
     "sequelize": "^6.29.0",
     "sequelize-cli": "^6.6.0",
+    "sequelize-replace-enum-postgres": "^1.6.0",
     "sequelize-typescript": "^2.1.5",
     "supertest": "^6.3.3",
     "tslint": "^6.1.3",
