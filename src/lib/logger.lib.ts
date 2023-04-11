@@ -3,11 +3,11 @@ import { config } from '../config';
 
 const transport = ['LOCAL'].includes(config.env)
   ? {
-    target: 'pino-pretty',
-    options: {
-      colorize: true,
-    },
-  }
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+      },
+    }
   : null;
 
 export const logger = pino({

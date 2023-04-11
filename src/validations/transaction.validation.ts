@@ -22,11 +22,7 @@ const createTransaction = [
     .trim(),
   body('year', 'Please enter a year').if(body('transactions').not().exists()).isInt({ min: 2000 }).trim(),
   body('exchangeRate', 'Please enter a exchangeRate')
-    .if(body('transactions').not().exists())
-    .custom(
-      (value, { req }) =>
-        (req.body.currency === CurrencyEnum.USD || req.body.currency === CurrencyEnum.EUR) && value,
-    )
+    .if(body('currency').custom((value) => value === CurrencyEnum.USD || value === CurrencyEnum.EUR))
     .isNumeric()
     .trim(),
   body('categoryId', 'Please enter a categoryId or category')

@@ -33,8 +33,8 @@ const createTransactionValidation = (
       });
     } else {
       if (
-        (transaction.currency === CurrencyEnum.USD ||
-        transaction.currency === CurrencyEnum.EUR) && !transaction.exchangeRate
+        (transaction.currency === CurrencyEnum.USD || transaction.currency === CurrencyEnum.EUR) &&
+        !transaction.exchangeRate
       ) {
         error.push({
           msg: 'Please enter a exchange rate',
