@@ -7,6 +7,7 @@ import { TransactionDTO } from '../types/DTOs';
 import { CreateTransactionRequest } from '../types/request/trsactions';
 import { NextFunction, Request, Response } from 'express';
 import { WhereOptions } from 'sequelize';
+import { TransactionBalances } from 'src/types/response/transactions';
 
 async function createTransaction(req: Request, res: Response, next: NextFunction) {
   try {
@@ -83,7 +84,7 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
     validationHelper.checkValidation(req);
 
     const { userId } = res.locals;
-    const { day, month, year, type } = req.query;
+    const { day, month, year, type, balance } = req.query;
 
     const where: WhereOptions<TransactionModel> = {
       userId,
@@ -104,15 +105,16 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
     if (year) {
       where.year = +year;
     }
+    let transactions: TransactionDTO[] | TransactionBalances;
 
-    const transactions: TransactionDTO[] = await transactionService.getAllTrasactions(where, [
-      {
-        model: CategoryModel,
-      },
-    ]);
-
-    if (!transactions) {
-      throw new CustomError(ApiError.Transaction.TRANSACTION_NOT_EXIST);
+    if (balance) {
+      transactions = await transactionService.calculateBalances(month as MonthEnum);
+    } else {
+      transactions = await transactionService.getAllTrasactions(where, [
+        {
+          model: CategoryModel,
+        },
+      ]);
     }
 
     res.send(new CustomResponse(true, transactions));

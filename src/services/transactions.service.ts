@@ -3,9 +3,10 @@ import { CreateTransactionRequest } from '../types/request/trsactions';
 import { CategoryDTO, TransactionDTO } from '../types/DTOs';
 import { categoryService } from '.';
 import { CustomError, logger } from '../lib';
-import { ApiError, MonthEnum } from '../enums';
+import { ApiError, CurrencyEnum, MonthEnum, TransactionType } from '../enums';
 import { plainToInstance } from 'class-transformer';
 import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
+import { Balances, TransactionBalances } from 'src/types/response/transactions';
 
 async function deleteTransaction(transactionId: string) {
   await TransactionModel.destroy({
@@ -16,7 +17,7 @@ async function deleteTransaction(transactionId: string) {
 }
 
 async function createTransactionByType(
-  newTransaction: CreateTransactionRequest | CreateTransactionRequest[]
+  newTransaction: CreateTransactionRequest | CreateTransactionRequest[],
 ): Promise<TransactionDTO | TransactionDTO[]> {
   const transaction = await sequelize().transaction();
   try {
@@ -24,11 +25,7 @@ async function createTransactionByType(
       const transactionCreated: TransactionDTO[] = [];
 
       for (const transactionData of newTransaction) {
-        const data = await createTransaction(
-          transactionData,
-          transaction,
-          false
-        );
+        const data = await createTransaction(transactionData, transaction, false);
 
         transactionCreated.push(data);
       }
@@ -64,7 +61,7 @@ async function createTransaction(
           userId: newTransaction.userId,
         },
         [],
-        { transaction }
+        { transaction },
       );
 
       if (!category) {
@@ -72,15 +69,11 @@ async function createTransaction(
       }
 
       if (category.type !== newTransaction.type) {
-        throw new CustomError(
-          ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE
-        );
+        throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
       }
     } else {
       if (newTransaction.category.type !== newTransaction.type) {
-        throw new CustomError(
-          ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE
-        );
+        throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
       }
 
       category = await categoryService.createCategory(
@@ -91,7 +84,7 @@ async function createTransaction(
         {
           transaction,
           commit: false,
-        }
+        },
       );
     }
 
@@ -119,7 +112,7 @@ async function createTransaction(
           },
         ],
         transaction,
-      }
+      },
     );
 
     if (commit) {
@@ -135,9 +128,79 @@ async function createTransaction(
   }
 }
 
+async function calculateBalances(month: MonthEnum): Promise<TransactionBalances> {
+  const transactions = await getAllTrasactions(
+    month
+      ? {
+        month,
+      }
+      : {},
+    [],
+  );
+
+  const expenses: Balances = {
+    total: 0,
+    eur: 0,
+    usd: 0,
+    uyu: 0,
+  };
+
+  const incomes: Balances = {
+    total: 0,
+    eur: 0,
+    usd: 0,
+    uyu: 0,
+  };
+
+  const savings: Balances = {
+    total: 0,
+    eur: 0,
+    usd: 0,
+    uyu: 0,
+  };
+
+  const getBalance = (transaction: TransactionDTO, balances: Balances) => {
+    switch (transaction.currency) {
+      case CurrencyEnum.UYU:
+        balances.uyu += transaction.amount;
+        balances.total += transaction.amount;
+        break;
+      case CurrencyEnum.USD:
+        balances.usd += transaction.amount;
+        balances.total += transaction.amount * transaction.exchangeRate;
+        break;
+      case CurrencyEnum.EUR:
+        balances.eur += transaction.amount;
+        balances.total += transaction.amount * transaction.exchangeRate;
+        break;
+    }
+  };
+
+  transactions.forEach((transaction) => {
+    switch (transaction.type) {
+      case TransactionType.EXPENSE:
+      case TransactionType.INSTALLMENTS:
+        getBalance(transaction, expenses);
+        break;
+      case TransactionType.INCOME:
+        getBalance(transaction, incomes);
+        break;
+      case TransactionType.SAVING:
+        getBalance(transaction, savings);
+        break;
+    }
+  });
+
+  return {
+    expenses,
+    incomes,
+    savings,
+  };
+}
+
 async function getAllTrasactions(
   where: WhereOptions<TransactionModel>,
-  include: IncludeOptions[] = []
+  include: IncludeOptions[] = [],
 ): Promise<TransactionDTO[]> {
   const trasactions = await TransactionModel.findAll({
     where,
@@ -153,7 +216,7 @@ async function getAllTrasactions(
 
 async function getTrasaction(
   where: WhereOptions<TransactionModel>,
-  include: IncludeOptions[] = []
+  include: IncludeOptions[] = [],
 ): Promise<TransactionDTO> {
   const trasaction = await TransactionModel.findOne({
     where,
@@ -186,8 +249,7 @@ async function getMonthsAndYears(userId: string): Promise<MonthByYear> {
 
     monthByYear[value.year].sort(
       (a: MonthEnum, b: MonthEnum) =>
-        Object.values(MonthEnum).indexOf(a) -
-        Object.values(MonthEnum).indexOf(b)
+        Object.values(MonthEnum).indexOf(a) - Object.values(MonthEnum).indexOf(b),
     );
   }
 
@@ -201,4 +263,5 @@ export const transactionService = {
   getAllTrasactions,
   createTransactionByType,
   getMonthsAndYears,
+  calculateBalances,
 };
