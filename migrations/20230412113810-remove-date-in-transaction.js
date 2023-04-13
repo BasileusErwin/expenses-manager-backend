@@ -3,10 +3,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return await queryInterface.renameColumn('categories', 'value', 'name');
+    return await queryInterface.removeColumn('transactions', 'date');
   },
 
   async down(queryInterface, Sequelize) {
-    return await queryInterface.renameColumn('categories', 'name', 'value');
+    return await queryInterface.addColumn('transactions', 'date', {
+      type: Sequelize.DATE,
+    });
   },
 };

@@ -1,4 +1,4 @@
-import { ApiError, MonthEnum } from '../enums';
+import { ApiError, MonthEnum, TransactionType } from '../enums';
 import { transactionHelper, validationHelper } from '../helpers';
 import { CustomError, CustomResponse, logger } from '../lib';
 import { CategoryModel, TransactionModel } from '../models';
@@ -83,11 +83,15 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
     validationHelper.checkValidation(req);
 
     const { userId } = res.locals;
-    const { day, month, year } = req.query;
+    const { day, month, year, type } = req.query;
 
     const where: WhereOptions<TransactionModel> = {
       userId,
     };
+
+    if (type) {
+      where.type = TransactionType[type as string];
+    }
 
     if (month) {
       where.month = month as MonthEnum;
@@ -129,9 +133,22 @@ async function deleteTrasactions(req: Request, res: Response, next: NextFunction
   }
 }
 
+async function getMonthsAndYears(_req: Request, res: Response, next: NextFunction) {
+  try {
+    const { userId } = res.locals;
+
+    const monthByYear = await transactionService.getMonthsAndYears(userId);
+
+    res.send(new CustomResponse(true, monthByYear));
+  } catch (err) {
+    next(err);
+  }
+}
+
 export const transactionController = {
   createTransaction,
   getTransactionById,
   getAllTransactionsByUserId,
   deleteTrasactions,
+  getMonthsAndYears,
 };

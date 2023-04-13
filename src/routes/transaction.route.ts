@@ -11,6 +11,11 @@ router
   .post(transactionValidation.createTransaction, transactionController.createTransaction);
 
 router
+  .route('/month-by-years')
+  .all(middlewareController.onlyLogin)
+  .get(transactionController.getMonthsAndYears);
+
+router
   .route('/:transactionId')
   .all(middlewareController.onlyLogin)
   .get(transactionController.getTransactionById)

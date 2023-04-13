@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 export enum MonthEnum {
   JANUARY = 'JANUARY',
   FEBRUARY = 'FEBRUARY',

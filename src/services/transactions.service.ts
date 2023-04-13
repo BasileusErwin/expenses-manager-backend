@@ -3,7 +3,7 @@ import { CreateTransactionRequest } from '../types/request/trsactions';
 import { CategoryDTO, TransactionDTO } from '../types/DTOs';
 import { categoryService } from '.';
 import { CustomError, logger } from '../lib';
-import { ApiError } from '../enums';
+import { ApiError, MonthEnum } from '../enums';
 import { plainToInstance } from 'class-transformer';
 import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
 
@@ -16,15 +16,19 @@ async function deleteTransaction(transactionId: string) {
 }
 
 async function createTransactionByType(
-  newTransaction: CreateTransactionRequest | CreateTransactionRequest[],
+  newTransaction: CreateTransactionRequest | CreateTransactionRequest[]
 ): Promise<TransactionDTO | TransactionDTO[]> {
   const transaction = await sequelize().transaction();
   try {
     if (Array.isArray(newTransaction)) {
-      let transactionCreated: TransactionDTO[] = [];
+      const transactionCreated: TransactionDTO[] = [];
 
       for (const transactionData of newTransaction) {
-        const data = await createTransaction(transactionData, transaction, false);
+        const data = await createTransaction(
+          transactionData,
+          transaction,
+          false
+        );
 
         transactionCreated.push(data);
       }
@@ -60,7 +64,7 @@ async function createTransaction(
           userId: newTransaction.userId,
         },
         [],
-        { transaction },
+        { transaction }
       );
 
       if (!category) {
@@ -68,11 +72,15 @@ async function createTransaction(
       }
 
       if (category.type !== newTransaction.type) {
-        throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
+        throw new CustomError(
+          ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE
+        );
       }
     } else {
       if (newTransaction.category.type !== newTransaction.type) {
-        throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
+        throw new CustomError(
+          ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE
+        );
       }
 
       category = await categoryService.createCategory(
@@ -83,7 +91,7 @@ async function createTransaction(
         {
           transaction,
           commit: false,
-        },
+        }
       );
     }
 
@@ -111,7 +119,7 @@ async function createTransaction(
           },
         ],
         transaction,
-      },
+      }
     );
 
     if (commit) {
@@ -129,7 +137,7 @@ async function createTransaction(
 
 async function getAllTrasactions(
   where: WhereOptions<TransactionModel>,
-  include: IncludeOptions[] = [],
+  include: IncludeOptions[] = []
 ): Promise<TransactionDTO[]> {
   const trasactions = await TransactionModel.findAll({
     where,
@@ -145,7 +153,7 @@ async function getAllTrasactions(
 
 async function getTrasaction(
   where: WhereOptions<TransactionModel>,
-  include: IncludeOptions[] = [],
+  include: IncludeOptions[] = []
 ): Promise<TransactionDTO> {
   const trasaction = await TransactionModel.findOne({
     where,
@@ -155,10 +163,42 @@ async function getTrasaction(
   return plainToInstance(TransactionDTO, trasaction);
 }
 
+type MonthByYear = { [key: string]: string[] };
+
+async function getMonthsAndYears(userId: string): Promise<MonthByYear> {
+  const transactions = await TransactionModel.findAll({
+    where: {
+      userId,
+    },
+    attributes: ['month', 'year'],
+  });
+
+  const monthByYear: MonthByYear = {};
+
+  for (const value of transactions) {
+    if (!monthByYear.hasOwnProperty(value.year)) {
+      monthByYear[value.year] = [];
+    }
+
+    if (!monthByYear[value.year].includes(value.month)) {
+      monthByYear[value.year].push(value.month);
+    }
+
+    monthByYear[value.year].sort(
+      (a: MonthEnum, b: MonthEnum) =>
+        Object.values(MonthEnum).indexOf(a) -
+        Object.values(MonthEnum).indexOf(b)
+    );
+  }
+
+  return monthByYear;
+}
+
 export const transactionService = {
   deleteTransaction,
   createTransaction,
   getTrasaction,
   getAllTrasactions,
   createTransactionByType,
+  getMonthsAndYears,
 };

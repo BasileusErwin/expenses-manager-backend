@@ -34,10 +34,10 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: null,
       },
-    })
+    });
   },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('sessions');
-  }
+  },
 };

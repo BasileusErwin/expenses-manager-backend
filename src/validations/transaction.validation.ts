@@ -51,6 +51,7 @@ const getTransaction = [
       }
     }),
   query('year').optional().isInt({ min: 2000 }),
+  query('type').optional().isIn(Object.values(TransactionType)),
 ];
 
 export const transactionValidation = {
