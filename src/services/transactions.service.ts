@@ -174,6 +174,11 @@ async function calculateBalances(month: MonthEnum): Promise<TransactionBalances>
         balances.total += transaction.amount * transaction.exchangeRate;
         break;
     }
+
+    balances.total = +balances.total.toFixed(2)
+    balances.eur = +balances.eur.toFixed(2)
+    balances.usd = +balances.usd.toFixed(2)
+    balances.uyu = +balances.uyu.toFixed(2)
   };
 
   transactions.forEach((transaction) => {
