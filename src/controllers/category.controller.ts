@@ -16,12 +16,13 @@ async function deleteCategory(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function getCategory(req: Request, res: Response, next: NextFunction) {
+async function getCategoryById(req: Request, res: Response, next: NextFunction) {
   try {
     const { categoryId } = req.params;
 
     const category = await categoryService.getCategory({
       categoryId,
+      userId: res.locals.userId,
     });
 
     if (!category) {
@@ -34,7 +35,18 @@ async function getCategory(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+async function getAllCategories(req: Request, res: Response, next: NextFunction) {
+  try {
+    const category = await categoryService.getAllCategories(res.locals.userId);
+
+    res.send(new CustomResponse(true, category));
+  } catch (err) {
+    next(err);
+  }
+}
+
 export const categoryController = {
   deleteCategory,
-  getCategory,
+  getCategoryById,
+  getAllCategories,
 };

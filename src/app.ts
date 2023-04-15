@@ -50,7 +50,11 @@ export class App {
   }
 
   private configureLogging() {
-    this.server.use(morgan('dev'));
+    this.server.use(
+      morgan('dev', {
+        skip: (req: Request, _res: Response) => req.baseUrl === '/api/health',
+      }),
+    );
   }
 
   private configureMiddleware() {

@@ -11,6 +11,16 @@ interface Opt {
   commit?: boolean;
 }
 
+async function getAllCategories(userId: string): Promise<CategoryDTO[]> {
+  const categories = await CategoryModel.findAll({
+    where: {
+      userId,
+    },
+  });
+
+  return plainToInstance(CategoryDTO, categories);
+}
+
 async function deleteCategory(categoryId: string, deleteTransactions: boolean) {
   const transaction = await sequelize().transaction();
   try {
@@ -112,4 +122,5 @@ export const categoryService = {
   getCategory,
   createCategory,
   deleteCategory,
+  getAllCategories,
 };

@@ -23,7 +23,6 @@ const handleDisconnect = () => {
       }
     })
     .catch((err) => {
-      // error. Wait 5 seconds and try again
       logger.error(err, 'CONNECTION ERROR');
       logger.info('Trying to connect again');
       setTimeout(handleDisconnect, 10000);

@@ -132,8 +132,8 @@ async function calculateBalances(month: MonthEnum): Promise<TransactionBalances>
   const transactions = await getAllTrasactions(
     month
       ? {
-        month,
-      }
+          month,
+        }
       : {},
     [],
   );
@@ -175,10 +175,10 @@ async function calculateBalances(month: MonthEnum): Promise<TransactionBalances>
         break;
     }
 
-    balances.total = +balances.total.toFixed(2)
-    balances.eur = +balances.eur.toFixed(2)
-    balances.usd = +balances.usd.toFixed(2)
-    balances.uyu = +balances.uyu.toFixed(2)
+    balances.total = +balances.total.toFixed(2);
+    balances.eur = +balances.eur.toFixed(2);
+    balances.usd = +balances.usd.toFixed(2);
+    balances.uyu = +balances.uyu.toFixed(2);
   };
 
   transactions.forEach((transaction) => {
