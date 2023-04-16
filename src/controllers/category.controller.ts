@@ -35,7 +35,7 @@ async function getCategoryById(req: Request, res: Response, next: NextFunction) 
   }
 }
 
-async function getAllCategories(req: Request, res: Response, next: NextFunction) {
+async function getAllCategories(_req: Request, res: Response, next: NextFunction) {
   try {
     const category = await categoryService.getAllCategories(res.locals.userId);
 

@@ -11,6 +11,11 @@ router
   .post(transactionValidation.createTransaction, transactionController.createTransaction);
 
 router
+  .route('/total-saving')
+  .all(middlewareController.onlyLogin)
+  .get(transactionController.getTotalSavings)
+
+router
   .route('/month-by-years')
   .all(middlewareController.onlyLogin)
   .get(transactionController.getMonthsAndYears);

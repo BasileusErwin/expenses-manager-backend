@@ -1,4 +1,3 @@
-
 export interface TransactionBalances {
   expenses: Balances;
   savings: Balances;
@@ -11,4 +10,3 @@ export interface Balances {
   usd: number;
   eur: number;
 }
-

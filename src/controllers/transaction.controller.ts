@@ -1,15 +1,19 @@
-import { ApiError, MonthEnum, TransactionType } from '../enums';
-import { transactionHelper, validationHelper } from '../helpers';
-import { CustomError, CustomResponse, logger } from '../lib';
-import { CategoryModel, TransactionModel } from '../models';
-import { transactionService } from '../services';
-import { TransactionDTO } from '../types/DTOs';
-import { CreateTransactionRequest } from '../types/request/trsactions';
-import { NextFunction, Request, Response } from 'express';
-import { WhereOptions } from 'sequelize';
-import { TransactionBalances } from 'src/types/response/transactions';
+import { ApiError, MonthEnum, TransactionType } from "../enums";
+import { transactionHelper, validationHelper } from "../helpers";
+import { CustomError, CustomResponse, logger } from "../lib";
+import { CategoryModel, TransactionModel } from "../models";
+import { transactionService } from "../services";
+import { TransactionDTO } from "../types/DTOs";
+import { CreateTransactionRequest } from "../types/request/trsactions";
+import { NextFunction, Request, Response } from "express";
+import { WhereOptions } from "sequelize";
+import { TransactionBalances } from "src/types/response/transactions";
 
-async function createTransaction(req: Request, res: Response, next: NextFunction) {
+async function createTransaction(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     validationHelper.checkValidation(req);
 
@@ -24,7 +28,8 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
     const { transactions } = body;
 
     if (Array.isArray(transactions)) {
-      const errors = transactionHelper.createTransactionValidation(transactions);
+      const errors =
+        transactionHelper.createTransactionValidation(transactions);
 
       if (errors.length) {
         throw new CustomError(ApiError.Server.PARAMS_REQUIRED, errors);
@@ -35,7 +40,7 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
           new CreateTransactionRequest({
             ...value,
             userId: res.locals.userId,
-          }),
+          })
       );
     } else {
       newTransaction = new CreateTransactionRequest({
@@ -44,7 +49,9 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
       });
     }
 
-    const transaction = await transactionService.createTransactionByType(newTransaction);
+    const transaction = await transactionService.createTransactionByType(
+      newTransaction
+    );
 
     res.send(new CustomResponse(true, transaction));
   } catch (err) {
@@ -52,7 +59,11 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
   }
 }
 
-async function getTransactionById(req: Request, res: Response, next: NextFunction) {
+async function getTransactionById(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { transactionId } = req.params;
     const { userId } = res.locals;
@@ -66,7 +77,7 @@ async function getTransactionById(req: Request, res: Response, next: NextFunctio
         {
           model: CategoryModel,
         },
-      ],
+      ]
     );
 
     if (!transaction) {
@@ -79,7 +90,11 @@ async function getTransactionById(req: Request, res: Response, next: NextFunctio
   }
 }
 
-async function getAllTransactionsByUserId(req: Request, res: Response, next: NextFunction) {
+async function getAllTransactionsByUserId(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     validationHelper.checkValidation(req);
 
@@ -108,7 +123,9 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
     let transactions: TransactionDTO[] | TransactionBalances;
 
     if (balance) {
-      transactions = await transactionService.calculateBalances(month as MonthEnum);
+      transactions = await transactionService.calculateBalances(
+        month as MonthEnum
+      );
     } else {
       transactions = await transactionService.getAllTrasactions(where, [
         {
@@ -123,7 +140,11 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
   }
 }
 
-async function deleteTrasactions(req: Request, res: Response, next: NextFunction) {
+async function deleteTrasactions(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { transactionId } = req.params;
 
@@ -135,7 +156,11 @@ async function deleteTrasactions(req: Request, res: Response, next: NextFunction
   }
 }
 
-async function getMonthsAndYears(_req: Request, res: Response, next: NextFunction) {
+async function getMonthsAndYears(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) {
   try {
     const { userId } = res.locals;
 
@@ -147,10 +172,39 @@ async function getMonthsAndYears(_req: Request, res: Response, next: NextFunctio
   }
 }
 
+async function getTotalSavings(
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { userId } = res.locals;
+
+    const total = await transactionService.getAllTrasactions({
+      userId,
+      type: TransactionType.SAVING,
+    });
+
+    const totalSavings = total.reduce(
+      (acc: number, transaction: TransactionDTO) => (acc += transaction.amount),
+      0
+    );
+
+    res.send(
+      new CustomResponse(true, {
+        totalSavings,
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+}
+
 export const transactionController = {
   createTransaction,
   getTransactionById,
   getAllTransactionsByUserId,
   deleteTrasactions,
   getMonthsAndYears,
+  getTotalSavings,
 };
