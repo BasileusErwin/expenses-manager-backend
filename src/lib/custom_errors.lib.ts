@@ -1,5 +1,5 @@
 import { CustomError } from '../types/generic';
-import { ApiError } from '../enums';
+import { ApiError, FinancialGoalsType, TransactionType } from '../enums';
 
 const customErrors: CustomError[] = [];
 
@@ -115,6 +115,24 @@ customErrors[ApiError.User.USER_ALREADY_EXISTS] = {
 };
 
 // Transaction
+customErrors[ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_TYPE] = {
+  message: 'Transaction and goal are not of the same type.',
+  showMessage: {
+    EN: `Transaction and goal are not of the same type. (${FinancialGoalsType.SPEND_LESS} == ${TransactionType.INSTALLMENTS}|${TransactionType.EXPENSE} || ${FinancialGoalsType.SAVING} == ${TransactionType.SAVING}`,
+    ES: `La transacción y el objetivo no son del mismo tipo. (${FinancialGoalsType.SPEND_LESS} == ${TransactionType.INSTALLMENTS}|${TransactionType.EXPENSE} || ${FinancialGoalsType.SAVING} == ${TransactionType.SAVING}`,
+  },
+  HTTPStatusCode: 409,
+};
+
+customErrors[ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_CURENCY] = {
+  message: 'Transaction and goal are not of the same currency.',
+  showMessage: {
+    EN: 'Transaction and goal are not of the same currency.',
+    ES: 'La transacción y la objetivo no son del misma momeda.',
+  },
+  HTTPStatusCode: 409,
+};
+
 customErrors[ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE] = {
   message: 'Transaction and category are not of the same type.',
   showMessage: {
@@ -148,6 +166,15 @@ customErrors[ApiError.Category.CANNOT_DELETE_CATEGORY_TRASACTIONS] = {
   showMessage: {
     EN: 'Cannot delete a category with trasactions, try with the query `?deleteTransactions=true` to delete all transactions.',
     ES: 'No se puede eliminar una categoría con transacciones, pruebe con la query `?deleteTransactions=true` para eliminar todas las transacciones',
+  },
+  HTTPStatusCode: 400,
+};
+
+customErrors[ApiError.FinancialGoal.FINANCIAL_GOAL_NOT_EXIST] = {
+  message: 'Financial goal not exist.',
+  showMessage: {
+    EN: 'Financial goal not exist.',
+    ES: 'El objetivo financiero no existe',
   },
   HTTPStatusCode: 400,
 };

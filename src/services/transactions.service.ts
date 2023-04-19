@@ -1,12 +1,12 @@
-import { CategoryModel, sequelize, TransactionModel } from '../models';
+import { CategoryModel, FinancialGoalModel, sequelize, TransactionModel } from '../models';
 import { CreateTransactionRequest } from '../types/request/trsactions';
+import { Balances, TransactionBalances } from '../types/response/transactions';
 import { CategoryDTO, TransactionDTO } from '../types/DTOs';
-import { categoryService } from '.';
+import { categoryService, financialGoalService } from '.';
 import { CustomError, logger } from '../lib';
-import { ApiError, CurrencyEnum, MonthEnum, TransactionType } from '../enums';
+import { ApiError, CurrencyEnum, FinancialGoalsType, MonthEnum, TransactionType } from '../enums';
 import { plainToInstance } from 'class-transformer';
-import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
-import { Balances, TransactionBalances } from 'src/types/response/transactions';
+import { IncludeOptions, Op, Transaction, WhereOptions } from 'sequelize';
 
 async function deleteTransaction(transactionId: string) {
   await TransactionModel.destroy({
@@ -16,7 +16,7 @@ async function deleteTransaction(transactionId: string) {
   });
 }
 
-async function createTransactionByType(
+async function createTransactionByArray(
   newTransaction: CreateTransactionRequest | CreateTransactionRequest[],
 ): Promise<TransactionDTO | TransactionDTO[]> {
   const transaction = await sequelize().transaction();
@@ -72,13 +72,16 @@ async function createTransaction(
         throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
       }
     } else {
-      if (newTransaction.category.type !== newTransaction.type) {
+      if (newTransaction.category?.type && newTransaction.category.type !== newTransaction.type) {
         throw new CustomError(ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE);
       }
+
+      const type = newTransaction.category?.type ? newTransaction.category?.type : newTransaction.type;
 
       category = await categoryService.createCategory(
         {
           ...newTransaction.category,
+          type,
           userId: newTransaction.userId,
         },
         {
@@ -261,12 +264,92 @@ async function getMonthsAndYears(userId: string): Promise<MonthByYear> {
   return monthByYear;
 }
 
+async function updateTransaction(
+  newTransaction: TransactionModel,
+  where: WhereOptions<TransactionModel>,
+): Promise<TransactionDTO> {
+  const transactions = await getAllTrasactions(where, []);
+
+  if (!transactions) {
+    throw new CustomError(ApiError.Transaction.TRANSACTION_NOT_EXIST);
+  }
+
+  const updated = await TransactionModel.update(newTransaction, {
+    where,
+  });
+
+  return plainToInstance(TransactionDTO, updated[0][1].get());
+}
+
+async function setGoalIdInTransaction(transactionId: string, goalId: string, userId: string) {
+  const transaction = await getTrasaction(
+    {
+      transactionId,
+      goalId: null,
+    },
+    [],
+  );
+
+  if (!transaction) {
+    throw new CustomError(ApiError.Transaction.TRANSACTION_NOT_EXIST);
+  }
+
+  const financialGoal = await financialGoalService.getFinancialGoal(
+    {
+      goalId,
+      userId,
+    },
+    [],
+  );
+
+  if (!financialGoal) {
+    throw new CustomError(ApiError.FinancialGoal.FINANCIAL_GOAL_NOT_EXIST);
+  }
+
+  if (financialGoal.currency === transaction.currency) {
+    throw new CustomError(ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_CURENCY);
+  }
+
+  if (
+    (financialGoal.type === FinancialGoalsType.SPEND_LESS &&
+      ![TransactionType.EXPENSE, TransactionType.INSTALLMENTS].includes(transaction.type)) ||
+    (financialGoal.type === FinancialGoalsType.SAVING && ![TransactionType.SAVING].includes(transaction.type))
+  ) {
+    throw new CustomError(ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_TYPE);
+  }
+
+  await TransactionModel.update(
+    {
+      goalId,
+    },
+    {
+      where: {
+        userId,
+        transactionId,
+      },
+    },
+  );
+
+  const currentAmount = financialGoal.currentAmount + transaction.amount;
+
+  await financialGoalService.updateFinancialGoal(
+    {
+      currentAmount,
+    },
+    {
+      goalId,
+    },
+  );
+}
+
 export const transactionService = {
   deleteTransaction,
   createTransaction,
   getTrasaction,
   getAllTrasactions,
-  createTransactionByType,
+  createTransactionByArray,
   getMonthsAndYears,
   calculateBalances,
+  updateTransaction,
+  setGoalIdInTransaction,
 };

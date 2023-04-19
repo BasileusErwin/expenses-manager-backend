@@ -7,7 +7,7 @@ export interface BodyRequest {
   userId: string;
 }
 
-export class CreateCategoryRequest {
+export class CreateCategoryRequest implements BodyRequest {
   readonly type: TransactionType;
   readonly name: string;
   readonly note: string;

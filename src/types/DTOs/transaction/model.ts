@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { CurrencyEnum, MonthEnum, TransactionType } from '../../../enums';
-import { CategoryDTO, UserDTO } from '..';
+import { FinancialGoalDTO, CategoryDTO, UserDTO } from '..';
 
 @Exclude()
 export class TransactionDTO {
@@ -47,4 +47,10 @@ export class TransactionDTO {
   @Type(() => CategoryDTO)
   @Expose()
   readonly category: CategoryDTO;
+  @Expose()
+  public goalId: string;
+
+  @Type(() => FinancialGoalDTO)
+  @Expose()
+  public financialGoal: FinancialGoalDTO;
 }

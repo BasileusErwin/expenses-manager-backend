@@ -11,7 +11,7 @@ const createTransactionValidation = (
   for (const [index, transaction] of transactions.entries()) {
     if (!Object.values(TransactionType).includes(transaction.type)) {
       error.push({
-        msg: 'Please enter a type',
+        msg: `Please enter a type: ${Object.values(TransactionType).join('|')}`,
         param: `transactions[${index}].type`,
         value: transaction.type,
       });
@@ -89,8 +89,9 @@ const createTransactionValidation = (
     } else {
       if (!transaction.categoryId || transaction.category) {
         if (
-          !Object.values(TransactionType).includes(transaction.category.type) &&
-          transaction.category.type !== transaction.type
+          transaction.category?.type ||
+          (!Object.values(TransactionType).includes(transaction.category?.type) &&
+            transaction.category?.type !== transaction.type)
         ) {
           error.push({
             msg: 'Transaction and category are not of the same type.',

@@ -10,15 +10,17 @@ router
   .get(transactionValidation.getTransaction, transactionController.getAllTransactionsByUserId)
   .post(transactionValidation.createTransaction, transactionController.createTransaction);
 
-router
-  .route('/total-saving')
-  .all(middlewareController.onlyLogin)
-  .get(transactionController.getTotalSavings)
+router.route('/total-saving').all(middlewareController.onlyLogin).get(transactionController.getTotalSavings);
 
 router
   .route('/month-by-years')
   .all(middlewareController.onlyLogin)
   .get(transactionController.getMonthsAndYears);
+
+router
+  .route('/:transactionId/set-goal')
+  .all(middlewareController.onlyLogin)
+  .patch(transactionValidation.setGoalInTransaction, transactionController.setGoalIdInTrnasaction);
 
 router
   .route('/:transactionId')

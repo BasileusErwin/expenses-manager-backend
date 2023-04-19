@@ -1,6 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import { TransactionType, CurrencyEnum, MonthEnum } from '../enums';
 import { CategoryModel, UserModel } from '.';
+import FinancialGoalModel from './financial_goals.model';
 
 @Table({ modelName: 'transactions', paranoid: true })
 export class TransactionModel extends Model<TransactionModel> {
@@ -61,6 +62,13 @@ export class TransactionModel extends Model<TransactionModel> {
 
   @BelongsTo(() => CategoryModel)
   public category: CategoryModel;
+
+  @ForeignKey(() => FinancialGoalModel)
+  @Column
+  public goalId: string;
+
+  @BelongsTo(() => FinancialGoalModel)
+  public financialGoal: FinancialGoalModel;
 }
 
 export default TransactionModel;

@@ -1,5 +1,5 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { TransactionDTO, SessionDTO, CategoryDTO } from '..';
+import { FinancialGoalDTO, TransactionDTO, SessionDTO, CategoryDTO } from '..';
 
 @Exclude()
 export class UserDTO {
@@ -32,4 +32,8 @@ export class UserDTO {
   @Type(() => CategoryDTO)
   @Expose()
   readonly categories: CategoryDTO[];
+
+  @Type(() => FinancialGoalDTO)
+  @Expose()
+  readonly financialGoals: FinancialGoalDTO[];
 }

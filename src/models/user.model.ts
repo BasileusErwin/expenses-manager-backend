@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { CategoryModel, SessionModel, TransactionModel } from '.';
+import { CategoryModel, FinancialGoalModel, SessionModel, TransactionModel } from '.';
 
 @Table({
   modelName: 'users',
@@ -38,6 +38,9 @@ export class UserModel extends Model<UserModel> {
 
   @HasMany(() => CategoryModel, 'user_id')
   public categories: CategoryModel[];
+
+  @HasMany(() => FinancialGoalModel, 'user_id')
+  public financialGoals: FinancialGoalModel[];
 }
 
 export default UserModel;

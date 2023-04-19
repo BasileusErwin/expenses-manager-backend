@@ -13,9 +13,10 @@ export interface BodyRequest {
   userId: string;
   categoryId?: string;
   category?: CreateCategoryRequest;
+  goalId?: string;
 }
 
-export class CreateTransactionRequest {
+export class CreateTransactionRequest implements BodyRequest {
   readonly type: TransactionType;
   readonly amount: number;
   readonly day: number;
@@ -25,6 +26,7 @@ export class CreateTransactionRequest {
   readonly exchangeRate?: number;
   readonly note: string;
   readonly userId: string;
+  readonly goalId?: string;
   public categoryId?: string;
   public category?: CreateCategoryRequest;
 
@@ -40,6 +42,7 @@ export class CreateTransactionRequest {
     userId,
     categoryId,
     category,
+    goalId,
   }: BodyRequest) {
     this.note = note;
     this.type = type;
@@ -50,6 +53,7 @@ export class CreateTransactionRequest {
     this.day = day;
     this.month = month;
     this.year = year;
+    this.goalId = goalId;
     if (!categoryId) {
       this.category = category;
     } else {
