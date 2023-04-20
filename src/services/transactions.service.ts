@@ -306,7 +306,7 @@ async function setGoalIdInTransaction(transactionId: string, goalId: string, use
     throw new CustomError(ApiError.FinancialGoal.FINANCIAL_GOAL_NOT_EXIST);
   }
 
-  if (financialGoal.currency === transaction.currency) {
+  if (financialGoal.currency !== transaction.currency) {
     throw new CustomError(ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_CURENCY);
   }
 

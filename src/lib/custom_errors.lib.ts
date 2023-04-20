@@ -128,7 +128,7 @@ customErrors[ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_CURENCY] = {
   message: 'Transaction and goal are not of the same currency.',
   showMessage: {
     EN: 'Transaction and goal are not of the same currency.',
-    ES: 'La transacción y la objetivo no son del misma momeda.',
+    ES: 'La transacción y la objetivo no tienen la misma moneda',
   },
   HTTPStatusCode: 409,
 };
