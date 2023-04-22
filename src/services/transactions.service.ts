@@ -175,8 +175,8 @@ async function calculateBalances(month: MonthEnum): Promise<TransactionBalances>
   const transactions = await getAllTrasactions(
     month
       ? {
-        month,
-      }
+          month,
+        }
       : {},
     [],
   );
