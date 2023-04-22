@@ -64,6 +64,10 @@ async function createTransaction(
         { transaction },
       );
 
+      logger.debug({
+        category
+      })
+
       if (!category) {
         throw new CustomError(ApiError.Category.CATEGORY_NOT_EXIST);
       }

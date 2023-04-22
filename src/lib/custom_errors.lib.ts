@@ -156,7 +156,7 @@ customErrors[ApiError.Category.CATEGORY_NOT_EXIST] = {
   message: 'Category not exist',
   showMessage: {
     EN: 'Category not exist',
-    ES: 'La transacción no existe',
+    ES: 'La categoria no existe',
   },
   HTTPStatusCode: 404,
 };
