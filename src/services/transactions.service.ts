@@ -6,9 +6,44 @@ import { categoryService, financialGoalService } from '.';
 import { CustomError, logger } from '../lib';
 import { ApiError, CurrencyEnum, FinancialGoalsType, MonthEnum, TransactionType } from '../enums';
 import { plainToInstance } from 'class-transformer';
-import { IncludeOptions, Op, Transaction, WhereOptions } from 'sequelize';
+import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
 
 async function deleteTransaction(transactionId: string) {
+  const transaction = await getTrasaction(
+    {
+      transactionId,
+    },
+    [
+      {
+        model: FinancialGoalModel,
+      },
+    ],
+  );
+
+  if (!transaction) {
+    throw new CustomError(ApiError.Transaction.TRANSACTION_NOT_EXIST);
+  }
+
+  if (transaction?.goalId) {
+    await financialGoalService.updateFinancialGoal(
+      {
+        currentAmount: transaction.financialGoal.currentAmount - transaction.amount,
+      },
+      {
+        goalId: transaction.goalId,
+      },
+    );
+
+    await updateTransaction(
+      {
+        goalId: null,
+      },
+      {
+        transactionId,
+      },
+    );
+  }
+
   await TransactionModel.destroy({
     where: {
       transactionId,
@@ -65,8 +100,8 @@ async function createTransaction(
       );
 
       logger.debug({
-        category
-      })
+        category,
+      });
 
       if (!category) {
         throw new CustomError(ApiError.Category.CATEGORY_NOT_EXIST);
@@ -140,8 +175,8 @@ async function calculateBalances(month: MonthEnum): Promise<TransactionBalances>
   const transactions = await getAllTrasactions(
     month
       ? {
-          month,
-        }
+        month,
+      }
       : {},
     [],
   );
@@ -269,8 +304,8 @@ async function getMonthsAndYears(userId: string): Promise<MonthByYear> {
   return monthByYear;
 }
 
-async function updateTransaction(
-  newTransaction: TransactionModel,
+async function updateTransaction<T extends Object>(
+  newTransaction: T,
   where: WhereOptions<TransactionModel>,
 ): Promise<TransactionDTO> {
   const transactions = await getAllTrasactions(where, []);
