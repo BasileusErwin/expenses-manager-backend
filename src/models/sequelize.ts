@@ -22,7 +22,7 @@ export const sequelize = () => {
       timezone: 'Etc/GMT0',
     },
     pool: {
-      max: 5,
+      max: 100,
       min: 0,
       acquire: 60000,
       idle: 10000,

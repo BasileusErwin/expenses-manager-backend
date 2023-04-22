@@ -127,6 +127,7 @@ async function createTransaction(
     if (commit) {
       await transaction.rollback();
     }
+
     throw err;
   }
 }

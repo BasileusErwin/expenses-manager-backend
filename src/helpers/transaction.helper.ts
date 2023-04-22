@@ -89,9 +89,9 @@ const createTransactionValidation = (
     } else {
       if (!transaction.categoryId || transaction.category) {
         if (
-          transaction.category?.type ||
-          (!Object.values(TransactionType).includes(transaction.category?.type) &&
-            transaction.category?.type !== transaction.type)
+          transaction.category?.type &&
+          !Object.values(TransactionType).includes(transaction.category?.type) &&
+          transaction.category?.type !== transaction.type
         ) {
           error.push({
             msg: 'Transaction and category are not of the same type.',
