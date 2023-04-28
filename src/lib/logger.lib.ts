@@ -1,7 +1,7 @@
 import pino from 'pino';
 import { config } from '../config';
 
-const transport = ['LOCAL'].includes(config.env)
+const transport = ['LOCAL', 'TEST'].includes(config.env)
   ? {
       target: 'pino-pretty',
       options: {

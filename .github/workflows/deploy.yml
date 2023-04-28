@@ -1,0 +1,28 @@
+name: Run Test
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      PORT: 3000
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Create env
+        run: |
+          cat << EOF > .env.test
+            ENV=TEST
+            PORT=3000
+            POSTGRES_URL=postgres://postgres:postgres@postgres/expenses-test
+          EOF
+
+      - name: Run docker
+        run: |
+          docker compose -f docker-compose.test.yml up \
+            --abort-on-container-exit \
+            --exit-code-from expenses

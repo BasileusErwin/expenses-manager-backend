@@ -12,14 +12,14 @@ export class SessionModel extends Model<SessionModel> {
   })
   public sessionId: string;
 
-  @Column({ allowNull: false })
+  @Column({ allowNull: false, type: DataType.STRING })
   public token: string;
 
-  @Column
+  @Column({ type: DataType.DATE })
   public deletedAt: Date;
 
   @ForeignKey(() => UserModel)
-  @Column
+  @Column({ type: DataType.UUIDV4 })
   public userId: string;
 
   @BelongsTo(() => UserModel, 'user_id')

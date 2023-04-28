@@ -16,7 +16,6 @@
       "es2021"
     ],
     "outDir": "dist",
-    "rootDir": "",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
@@ -29,20 +28,38 @@
     ],
     "baseUrl": "src",
     "paths": {
-      "services/*": [
-        "services/*"
+      "config/*": [
+        "config/*"
       ],
-      "routes/*": [
-        "routes/*"
+      "constrollers/*": [
+        "constrollers/*"
       ],
       "enums/*": [
         "enums/*"
       ],
-      "models/*": [
-        "models/*"
+      "helpers/*": [
+        "helpers/*"
       ],
       "lib/*": [
         "lib/*"
+      ],
+      "models/*": [
+        "models/*"
+      ],
+      "routes/*": [
+        "routes/*"
+      ],
+      "services/*": [
+        "services/*"
+      ],
+      "types/*": [
+        "types/*"
+      ],
+      "utils/*": [
+        "utils/*"
+      ],
+      "validations/*": [
+        "validations/*"
       ],
       "src/*": [
         "*"

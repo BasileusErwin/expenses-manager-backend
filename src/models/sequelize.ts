@@ -8,13 +8,9 @@ export const sequelize = () => {
   if (sequelizeInstance) {
     return sequelizeInstance;
   }
-
-  let models = [`${__dirname}/*.model.js`];
-
   const env = config.env;
-  if (env === 'LOCAL' || env === 'TEST') {
-    models = [`${__dirname}/*.model.ts`];
-  }
+
+  const models = [`${__dirname}/${['LOCAL', 'TEST'].includes(env) ? '/*.model.ts' : '*.model.js'}`];
 
   sequelizeInstance = new Sequelize(config.databaseUrl, {
     dialect: 'postgres',

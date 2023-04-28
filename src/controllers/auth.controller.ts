@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { validationHelper } from '../helpers';
 import { CustomResponse } from '../lib';
 import { authService } from '../services';
 
@@ -9,6 +10,8 @@ interface LoginRequest {
 
 async function login(req: Request, res: Response, next: NextFunction) {
   try {
+    validationHelper.checkValidation(req);
+
     const { email, password }: LoginRequest = req.body;
 
     const response = await authService.login(email, password);

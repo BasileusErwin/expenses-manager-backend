@@ -7,6 +7,12 @@ const registerUser = [
   check('password', 'Please enter a password').notEmpty().trim(),
 ];
 
+const loginUser = [
+  check('email').isEmail().withMessage('Please enter a valid email').normalizeEmail(),
+  check('password', 'Please enter a password').notEmpty().trim(),
+];
+
 export const userValidation = {
   registerUser,
+  loginUser,
 };

@@ -10,8 +10,7 @@
     "formatWithErrors": false,
     "indentStyle": "space",
     "indentSize": 2,
-    "lineWidth": 110,
-    "ignore": []
+    "lineWidth": 110
   },
   "javascript": {
     "formatter": {

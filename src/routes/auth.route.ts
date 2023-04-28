@@ -4,8 +4,8 @@ import { userValidation } from '../validations';
 
 const router: Router = Router();
 
-router.route('/login').post(userValidation.registerUser, authController.login);
+router.route('/login').post(userValidation.loginUser, authController.login);
 
-router.route('/logout').get(middlewareController.onlyLogin, authController.logout);
+router.route('/logout').delete(middlewareController.onlyLogin, authController.logout);
 
 export const authRouter: Router = router;

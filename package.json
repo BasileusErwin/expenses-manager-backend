@@ -7,6 +7,7 @@
     "build": "rm -rf dist/ && tsc",
     "dev": "nodemon",
     "start": "NODE_PATH=dist/src/ node dist/src/server.js",
+    "test": "env $(cat .env.test | grep -v '#' | xargs) ENV=test jest --verbose --colors --coverage --detectOpenHandles --forceExit --runInBand",
     "lint": "yarn rome check src/**/*.ts",
     "format": "yarn rome format --write src/**/*.ts"
   },
@@ -53,7 +54,7 @@
     "pino": "^8.11.0",
     "pino-pretty": "^9.4.0",
     "reflect-metadata": "^0.1.13",
-    "rome": "^11.0.0",
+    "rome": "^12.0.0",
     "sequelize": "^6.29.0",
     "sequelize-cli": "^6.6.0",
     "sequelize-replace-enum-postgres": "^1.6.0",
