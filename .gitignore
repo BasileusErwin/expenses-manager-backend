@@ -17,4 +17,4 @@ dist
 
 .postgres
 
-.coverage
+coverage
