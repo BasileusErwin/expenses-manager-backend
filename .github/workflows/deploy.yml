@@ -16,9 +16,9 @@ jobs:
       - name: Create env
         run: |
           cat << EOF > .env.test
-            ENV=TEST
             PORT=3000
-            POSTGRES_URL=postgres://postgres:postgres@postgres/expenses-test
+            ENV=TEST
+            POSTGRES_URL=postgres://postgres:postgres@postgres/expenses_test
           EOF
 
       - name: Run docker
@@ -26,3 +26,4 @@ jobs:
           docker compose -f docker-compose.test.yml up \
             --abort-on-container-exit \
             --exit-code-from expenses
+

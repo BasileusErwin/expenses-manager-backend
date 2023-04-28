@@ -1,0 +1,6 @@
+.postgres
+
+.env
+.env.test
+
+.coverage

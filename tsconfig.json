@@ -16,6 +16,7 @@
       "es2021"
     ],
     "outDir": "dist",
+    "rootDir": "",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
