@@ -18,7 +18,7 @@ jobs:
           cat << EOF > .env.test
             PORT=3000
             ENV=TEST
-            POSTGRES_URL=postgres://postgres:postgres@postgres/expenses_test
+            POSTGRES_URL=postgres://postgres:postgres@postgres/expenses-test
           EOF
 
       - name: Run docker

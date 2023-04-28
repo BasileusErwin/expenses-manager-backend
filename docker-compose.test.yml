@@ -6,7 +6,7 @@ services:
     container_name: postgres
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: expenses_test
+      POSTGRES_DB: expenses-test
     volumes:
       - ./.postgres:/var/lib/postgresql/data
     ports:
@@ -23,4 +23,4 @@ services:
       - $PORT:$PORT
     depends_on:
       - postgres
-    command: sh -c "yarn test"
+    command: sh -c "yarn install && yarn test"
