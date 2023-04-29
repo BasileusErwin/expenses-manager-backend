@@ -1,14 +1,10 @@
 import { IncludeOptions, WhereOptions } from 'sequelize';
 import { plainToInstance } from 'class-transformer';
-import {
-  CreateFinancialGoal,
-  FinancialGoalUpdateOptions,
-  UpdateOptions,
-} from '../types/request/financial_goal';
-import { TransactionModel, FinancialGoalModel } from '../models';
+import { CreateFinancialGoal, UpdateOptions } from '../types/request/financial_goal';
+import { FinancialGoalModel } from '../models';
 import { FinancialGoalDTO } from '../types/DTOs';
 import { CustomError } from '../lib';
-import { ApiError, CurrencyEnum, FinancialGoalsType, MonthEnum } from '../enums';
+import { ApiError } from '../enums';
 
 async function createFinancialGoal(newGoal: CreateFinancialGoal): Promise<FinancialGoalDTO> {
   const financialGoal = await FinancialGoalModel.create(newGoal);

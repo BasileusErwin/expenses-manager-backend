@@ -47,6 +47,7 @@ const createTransaction = [
 ];
 
 const getTransaction = [
+  param('transactionId').isUUID(),
   query('month').optional().isIn(Object.values(MonthEnum)),
   query('day')
     .optional()
@@ -65,8 +66,11 @@ const setGoalInTransaction = [
   body('goalId', 'Please enter a goal id').isUUID(),
 ];
 
+const transactionIdInParam = [param('transactionId').isUUID()];
+
 export const transactionValidation = {
   createTransaction,
   getTransaction,
   setGoalInTransaction,
+  transactionIdInParam,
 };

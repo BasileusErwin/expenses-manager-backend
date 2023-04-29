@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { CustomResponse } from '../lib';
+import { CustomResponse, CustomError } from '../lib';
 import { TransactionModel } from '../models';
 import { validationHelper } from '../helpers';
 import { financialGoalService } from '../services';
 import { CreateFinancialGoal } from '../types/request/financial_goal';
+import { ApiError } from '../enums';
 
 async function createFinancialGoal(req: Request, res: Response, next: NextFunction) {
   try {
@@ -26,6 +27,8 @@ async function createFinancialGoal(req: Request, res: Response, next: NextFuncti
 
 async function getFinancialGoalById(req: Request, res: Response, next: NextFunction) {
   try {
+    validationHelper.checkValidation(req);
+
     const { userId } = res.locals;
     const { goalId } = req.params;
 
@@ -40,6 +43,10 @@ async function getFinancialGoalById(req: Request, res: Response, next: NextFunct
         },
       ],
     );
+
+    if (!financialGoal) {
+      throw new CustomError(ApiError.FinancialGoal.FINANCIAL_GOAL_NOT_EXIST);
+    }
 
     return res.send(new CustomResponse(true, financialGoal));
   } catch (err) {

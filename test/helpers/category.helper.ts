@@ -2,13 +2,11 @@ import { SuperTest, Request, Response } from 'supertest';
 import { CreateCategoryRequest } from '../../src/types/request/category';
 import { genericFactory } from '../factories';
 import { Helper } from '.';
-
-interface RequestOptions {
-  notIncludeToken: boolean;
-}
+import { RequestOptions } from '../types/generic';
 
 export class CategoryHelper extends Helper {
   readonly userToken: string;
+  private endpoint: string = '/api/categories';
 
   constructor(request: SuperTest<Request>, userToken: string) {
     super(request);
@@ -16,7 +14,7 @@ export class CategoryHelper extends Helper {
   }
 
   public async createCategory(category: CreateCategoryRequest, options?: RequestOptions): Promise<Response> {
-    const request = this.request.post('/api/categories/').set(genericFactory.buildHeader());
+    const request = this.request.post(this.endpoint).set(genericFactory.buildHeader());
 
     if (!options?.notIncludeToken) {
       request.set('Cookie', `token=${this.userToken}`);
@@ -26,7 +24,7 @@ export class CategoryHelper extends Helper {
   }
 
   public async getCategories(options: RequestOptions): Promise<Response> {
-    const request = this.request.get('/api/categories').set(genericFactory.buildHeader());
+    const request = this.request.get(this.endpoint).set(genericFactory.buildHeader());
 
     if (!options.notIncludeToken) {
       request.set('Cookie', `token=${this.userToken}`);
@@ -36,7 +34,7 @@ export class CategoryHelper extends Helper {
   }
 
   public async deleteCategory(categoryId: string, options: RequestOptions): Promise<Response> {
-    const request = this.request.delete(`/api/categories/${categoryId}`).set(genericFactory.buildHeader());
+    const request = this.request.delete(`${this.endpoint}/${categoryId}`).set(genericFactory.buildHeader());
 
     if (!options.notIncludeToken) {
       request.set('Cookie', `token=${this.userToken}`);
@@ -46,7 +44,7 @@ export class CategoryHelper extends Helper {
   }
 
   public async getCategory(categoryId: string, options: RequestOptions): Promise<Response> {
-    const request = this.request.get(`/api/categories/${categoryId}`).set(genericFactory.buildHeader());
+    const request = this.request.get(`${this.endpoint}/${categoryId}`).set(genericFactory.buildHeader());
 
     if (!options.notIncludeToken) {
       request.set('Cookie', `token=${this.userToken}`);

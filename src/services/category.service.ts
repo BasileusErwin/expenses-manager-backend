@@ -93,7 +93,7 @@ async function getCategory(
   include: IncludeOptions[] = [],
   opt: Opt = {
     transaction: null,
-    commit: true
+    commit: true,
   },
 ): Promise<CategoryDTO> {
   if (!opt?.transaction) {

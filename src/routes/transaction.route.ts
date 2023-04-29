@@ -24,7 +24,7 @@ router
 
 router
   .route('/:transactionId')
-  .all(middlewareController.onlyLogin)
+  .all(middlewareController.onlyLogin, transactionValidation.transactionIdInParam)
   .get(transactionController.getTransactionById)
   .delete(transactionController.deleteTrasactions);
 

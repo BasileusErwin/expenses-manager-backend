@@ -12,7 +12,7 @@ router
 
 router
   .route('/:goalId')
-  .all(middlewareController.onlyLogin)
+  .all(middlewareController.onlyLogin, financialGoalValidation.getFinancialGoal)
   .get(financialGoalController.getFinancialGoalById);
 
 export const financialGoalRouter: Router = router;

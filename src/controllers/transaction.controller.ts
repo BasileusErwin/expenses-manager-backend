@@ -54,6 +54,8 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
 
 async function getTransactionById(req: Request, res: Response, next: NextFunction) {
   try {
+    validationHelper.checkValidation(req);
+
     const { transactionId } = req.params;
     const { userId } = res.locals;
 
@@ -125,6 +127,8 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
 
 async function deleteTrasactions(req: Request, res: Response, next: NextFunction) {
   try {
+    validationHelper.checkValidation(req);
+
     const { transactionId } = req.params;
 
     await transactionService.deleteTransaction(transactionId);

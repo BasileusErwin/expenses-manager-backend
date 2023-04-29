@@ -1,9 +1,8 @@
 import { SuperTest, Request } from 'supertest';
+import { Helper } from '.';
 
-export abstract class Helper {
-  readonly request: SuperTest<Request>;
-
+export class TransactionHelper extends Helper {
   constructor(request: SuperTest<Request>) {
-    this.request = request;
+    super(request);
   }
 }

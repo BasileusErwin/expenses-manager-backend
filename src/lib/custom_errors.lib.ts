@@ -177,7 +177,7 @@ customErrors[ApiError.FinancialGoal.FINANCIAL_GOAL_NOT_EXIST] = {
     EN: 'Financial goal not exist.',
     ES: 'El objetivo financiero no existe',
   },
-  HTTPStatusCode: StatusCodes.UNAUTHORIZED,
+  HTTPStatusCode: StatusCodes.NOT_FOUND,
 };
 
 export { customErrors };

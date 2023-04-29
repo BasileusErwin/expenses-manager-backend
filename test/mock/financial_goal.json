@@ -1,0 +1,9 @@
+{
+  "type": "SPEND_LESS",
+  "targetAmount": 0,
+  "currentAmount": 0,
+  "name": "Finacial goal example",
+  "note": "Note Example",
+  "month": "JANUARY",
+  "year": 2023
+}
