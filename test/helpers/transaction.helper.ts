@@ -14,12 +14,10 @@ export class TransactionHelper extends Helper {
   }
 
   public async createTransaction(body: CreateTransactionRequest, options: RequestOptions): Promise<Response> {
-    const request = this.request
-      .post(this.endpoint)
-      .set(genericFactory.buildHeader());
+    const request = this.request.post(this.endpoint).set(genericFactory.buildHeader());
 
     if (!options.notIncludeToken) {
-      request.set("Cookie", `token=${this.userToken}`);
+      request.set('Cookie', `token=${this.userToken}`);
     }
 
     return await request.send(body);

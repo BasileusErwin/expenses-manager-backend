@@ -1,28 +1,17 @@
-import { StatusCodes } from "http-status-codes";
-import "jest";
-import supertest from "supertest";
-import { App } from "../../src/app";
-import { ApiError, CurrencyEnum, TransactionType } from "../../src/enums";
-import { transactionFactory } from "../factories";
-import {
-  CategoryHelper,
-  databaseHelper,
-  TransactionHelper,
-  UserHelper,
-} from "../helpers";
+import { StatusCodes } from 'http-status-codes';
+import 'jest';
+import supertest from 'supertest';
+import { App } from '../../src/app';
+import { ApiError, CurrencyEnum, TransactionType } from '../../src/enums';
+import { transactionFactory } from '../factories';
+import { CategoryHelper, databaseHelper, TransactionHelper, UserHelper } from '../helpers';
 
-describe("/api/transactions", () => {
+describe('/api/transactions', () => {
   const app: App = new App();
   const request = supertest(app.server);
   const userHelper: UserHelper = new UserHelper(request);
-  const categoryHelper: CategoryHelper = new CategoryHelper(
-    request,
-    userHelper.tokenMock
-  );
-  const transactionHelper: TransactionHelper = new TransactionHelper(
-    request,
-    userHelper.tokenMock
-  );
+  const categoryHelper: CategoryHelper = new CategoryHelper(request, userHelper.tokenMock);
+  const transactionHelper: TransactionHelper = new TransactionHelper(request, userHelper.tokenMock);
 
   beforeAll(async () => {
     await app.connectToDatabase();
@@ -31,10 +20,10 @@ describe("/api/transactions", () => {
     await categoryHelper.createUserFromCSV(userHelper.userIdMock);
   });
 
-  describe("Create Transaction type Expenses", () => {
+  describe('Create Transaction type Expenses', () => {
     const type: TransactionType = TransactionType.EXPENSE;
 
-    it("should return 200 if all data is valid currency UYU, Simple form with categoryId", async () => {
+    it('should return 200 if all data is valid currency UYU, Simple form with categoryId', async () => {
       const response = await transactionHelper.createTransaction(
         transactionFactory.buildTransaction({
           categoryId: categoryHelper.categoryIdByType.get(type),
@@ -43,14 +32,14 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body.result).toBeTruthy();
     });
 
-    it("should return 200 if all data is valid and currency UYU, Simple form with categoryId", async () => {
+    it('should return 200 if all data is valid and currency UYU, Simple form with categoryId', async () => {
       const response = await transactionHelper.createTransaction(
         transactionFactory.buildTransaction({
           categoryId: categoryHelper.categoryIdByType.get(type),
@@ -59,7 +48,7 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.OK);
@@ -67,10 +56,10 @@ describe("/api/transactions", () => {
     });
   });
 
-  describe("Create transaction type Income ", () => {
+  describe('Create transaction type Income ', () => {
     const type: TransactionType = TransactionType.INCOME;
 
-    it("should return 200 if all data is valid and currency UYU, Simple form with categoryId", async () => {
+    it('should return 200 if all data is valid and currency UYU, Simple form with categoryId', async () => {
       const response = await transactionHelper.createTransaction(
         transactionFactory.buildTransaction({
           categoryId: categoryHelper.categoryIdByType.get(type),
@@ -79,14 +68,14 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body.result).toBeTruthy();
     });
 
-    it("should return 200 if all data is valid and currency USD, Simple form with categoryId", async () => {
+    it('should return 200 if all data is valid and currency USD, Simple form with categoryId', async () => {
       const response = await transactionHelper.createTransaction(
         transactionFactory.buildTransaction({
           categoryId: categoryHelper.categoryIdByType.get(type),
@@ -96,7 +85,7 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.OK);
@@ -112,12 +101,12 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body.result).toBeFalsy();
-      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED)
+      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED);
     });
 
     it("should return 400 if don't send a exchangeRate if currency is EUR", async () => {
@@ -129,19 +118,19 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body.result).toBeFalsy();
-      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED)
+      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED);
     });
   });
 
-  describe("Create transaction type Saving ", () => {
+  describe('Create transaction type Saving ', () => {
     const type: TransactionType = TransactionType.SAVING;
 
-    it("should return 200 if all data is valid and currency UYU, Simple form with categoryId", async () => {
+    it('should return 200 if all data is valid and currency UYU, Simple form with categoryId', async () => {
       const response = await transactionHelper.createTransaction(
         transactionFactory.buildTransaction({
           categoryId: categoryHelper.categoryIdByType.get(type),
@@ -150,14 +139,14 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body.result).toBeTruthy();
     });
 
-    it("should return 200 if all data is valid and currency USD, Simple form with categoryId", async () => {
+    it('should return 200 if all data is valid and currency USD, Simple form with categoryId', async () => {
       const response = await transactionHelper.createTransaction(
         transactionFactory.buildTransaction({
           categoryId: categoryHelper.categoryIdByType.get(type),
@@ -167,7 +156,7 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.OK);
@@ -183,12 +172,12 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body.result).toBeFalsy();
-      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED)
+      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED);
     });
 
     it("should return 400 if don't send a exchangeRate if currency is EUR", async () => {
@@ -200,19 +189,19 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body.result).toBeFalsy();
-      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED)
+      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED);
     });
   });
 
-  describe("Create transaction type INSTALLMENTS ", () => {
+  describe('Create transaction type INSTALLMENTS ', () => {
     const type: TransactionType = TransactionType.INSTALLMENTS;
 
-    it("should return 200 if all data is valid and currency UYU, Simple form with categoryId", async () => {
+    it('should return 200 if all data is valid and currency UYU, Simple form with categoryId', async () => {
       const response = await transactionHelper.createTransaction(
         transactionFactory.buildTransaction({
           categoryId: categoryHelper.categoryIdByType.get(type),
@@ -221,14 +210,14 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body.result).toBeTruthy();
     });
 
-    it("should return 200 if all data is valid and currency USD, Simple form with categoryId", async () => {
+    it('should return 200 if all data is valid and currency USD, Simple form with categoryId', async () => {
       const response = await transactionHelper.createTransaction(
         transactionFactory.buildTransaction({
           categoryId: categoryHelper.categoryIdByType.get(type),
@@ -238,7 +227,7 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.OK);
@@ -254,12 +243,12 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body.result).toBeFalsy();
-      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED)
+      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED);
     });
 
     it("should return 400 if don't send a exchangeRate if currency is EUR", async () => {
@@ -271,12 +260,12 @@ describe("/api/transactions", () => {
         }),
         {
           notIncludeToken: false,
-        }
+        },
       );
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body.result).toBeFalsy();
-      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED)
+      expect(response.body.errorCode).toBe(ApiError.Server.PARAMS_REQUIRED);
     });
   });
 });
