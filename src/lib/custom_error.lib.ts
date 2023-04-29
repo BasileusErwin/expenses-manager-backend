@@ -1,10 +1,11 @@
-import { customErrors, logger } from '.';
+import { customErrors } from '.';
+import { StatusCodes } from 'http-status-codes';
 
 export class CustomError<T extends object> extends Error {
   public errorCode: number;
   public data: T;
   public message: string;
-  public statusCode: number;
+  public statusCode: StatusCodes;
 
   constructor(errorCode: number, data?: T) {
     super(customErrors[errorCode].message);

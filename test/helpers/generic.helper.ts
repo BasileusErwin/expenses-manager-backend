@@ -1,4 +1,4 @@
-import { SuperTest, Request } from "supertest";
+import { SuperTest, Request } from 'supertest';
 
 export class Helper {
   readonly request: SuperTest<Request>;

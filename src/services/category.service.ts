@@ -3,7 +3,7 @@ import { CategoryModel, sequelize, TransactionModel } from '../models';
 import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
 import { CategoryDTO } from '../types/DTOs';
 import { CreateCategoryRequest } from '../types/request/category';
-import { CustomError } from '../lib';
+import { CustomError, logger } from '../lib';
 import { ApiError } from 'enums/api_error.enum';
 
 interface Opt {
@@ -21,38 +21,62 @@ async function getAllCategories(userId: string): Promise<CategoryDTO[]> {
   return plainToInstance(CategoryDTO, categories);
 }
 
-async function deleteCategory(categoryId: string, deleteTransactions: boolean) {
+async function deleteCategory(categoryId: string, userId: string, deleteTransactions: boolean) {
   const transaction = await sequelize().transaction();
   try {
-    if (deleteTransactions) {
-      await TransactionModel.destroy({
-        where: {
-          categoryId,
-        },
-        transaction,
-      });
-    }
-
-    const category = await getCategory(
-      {
-        where: {
-          categoryId,
-        },
+    const category = await CategoryModel.findOne({
+      where: {
+        userId,
+        categoryId,
       },
-      [
+      include: [
         {
           model: TransactionModel,
         },
       ],
-    );
+      transaction,
+    });
 
-    if (category.trasactions) {
+    if (!category) {
+      throw new CustomError(ApiError.Category.CATEGORY_NOT_EXIST);
+    }
+
+    logger.debug({
+      category,
+      deleteTransactions,
+    });
+
+    if (category?.trasactions.length !== 0 && !deleteTransactions) {
       throw new CustomError(ApiError.Category.CANNOT_DELETE_CATEGORY_TRASACTIONS);
+    }
+
+    if (deleteTransactions) {
+      await TransactionModel.destroy({
+        where: {
+          categoryId,
+          userId,
+        },
+        transaction,
+      });
+    } else {
+      await TransactionModel.update(
+        {
+          categoryId: null,
+        },
+        {
+          where: {
+            categoryId,
+            userId,
+          },
+          transaction,
+        },
+      );
     }
 
     await CategoryModel.destroy({
       where: {
         categoryId,
+        userId,
       },
       transaction,
     });
@@ -67,7 +91,10 @@ async function deleteCategory(categoryId: string, deleteTransactions: boolean) {
 async function getCategory(
   where: WhereOptions<CategoryModel>,
   include: IncludeOptions[] = [],
-  opt: Opt = null,
+  opt: Opt = {
+    transaction: null,
+    commit: true
+  },
 ): Promise<CategoryDTO> {
   if (!opt?.transaction) {
     opt.transaction = await sequelize().transaction();
@@ -95,7 +122,7 @@ async function getCategory(
 }
 
 async function createCategory(newCategory: CreateCategoryRequest, opt: Opt = null): Promise<CategoryDTO> {
-  if (!opt?.transaction) {
+  if (!opt.transaction) {
     opt.transaction = await sequelize().transaction();
   }
 

@@ -1,5 +1,6 @@
 import { CustomError } from '../types/generic';
 import { ApiError, FinancialGoalsType, TransactionType } from '../enums';
+import { StatusCodes } from 'http-status-codes';
 
 const customErrors: CustomError[] = [];
 
@@ -9,7 +10,7 @@ customErrors[ApiError.Auth.BAD_AUTH] = {
     EN: 'Incorrect email/password',
     ES: 'Email o contraseña incorrectos',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.BAD_REQUEST,
 };
 
 customErrors[ApiError.Auth.UNAUTHORIZED] = {
@@ -18,7 +19,7 @@ customErrors[ApiError.Auth.UNAUTHORIZED] = {
     EN: 'Unauthorized',
     ES: 'No autorizado',
   },
-  HTTPStatusCode: 401,
+  HTTPStatusCode: StatusCodes.UNAUTHORIZED,
 };
 
 customErrors[ApiError.Auth.BAD_EMAIL_FORMAT] = {
@@ -27,7 +28,7 @@ customErrors[ApiError.Auth.BAD_EMAIL_FORMAT] = {
     EN: 'Email is not valid',
     ES: 'Email no es válido',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.BAD_REQUEST,
 };
 
 customErrors[ApiError.Auth.EXPIRED_TOKEN] = {
@@ -36,7 +37,7 @@ customErrors[ApiError.Auth.EXPIRED_TOKEN] = {
     EN: 'Your session has expired',
     ES: 'Su sesión ha expirado',
   },
-  HTTPStatusCode: 401,
+  HTTPStatusCode: StatusCodes.UNAUTHORIZED,
 };
 
 customErrors[ApiError.Auth.NEED_BE_LOGGED_IN] = {
@@ -45,7 +46,7 @@ customErrors[ApiError.Auth.NEED_BE_LOGGED_IN] = {
     EN: 'You need to be logged in',
     ES: 'Debe estar conectado',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.UNAUTHORIZED,
 };
 
 // Server
@@ -55,7 +56,7 @@ customErrors[ApiError.Server.TOO_FEW_PARAMS] = {
     EN: 'Too few parameters',
     ES: 'Faltan parametros',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.BAD_REQUEST,
 };
 
 customErrors[ApiError.Server.NOT_FOUND] = {
@@ -64,7 +65,7 @@ customErrors[ApiError.Server.NOT_FOUND] = {
     EN: 'Not found',
     ES: 'Recurso no encontrado',
   },
-  HTTPStatusCode: 404,
+  HTTPStatusCode: StatusCodes.NOT_FOUND,
 };
 
 customErrors[ApiError.Server.PARAMS_REQUIRED] = {
@@ -73,7 +74,7 @@ customErrors[ApiError.Server.PARAMS_REQUIRED] = {
     EN: 'Some body parameters are missing or are incorrect',
     ES: 'Faltan o son incorrectos algunos parametros de la solicitud',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.BAD_REQUEST,
 };
 
 // User
@@ -84,7 +85,7 @@ customErrors[ApiError.User.USER_DOES_NOT_EXIST] = {
     EN: 'User does not exist',
     ES: 'El usuario no existe',
   },
-  HTTPStatusCode: 404,
+  HTTPStatusCode: StatusCodes.NOT_FOUND,
 };
 
 customErrors[ApiError.User.WRONG_PASSWORD] = {
@@ -93,7 +94,7 @@ customErrors[ApiError.User.WRONG_PASSWORD] = {
     EN: 'Wrong password',
     ES: 'Contraseña incorrecta',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.UNAUTHORIZED,
 };
 
 customErrors[ApiError.User.PASSWORD_TOO_SHORT] = {
@@ -102,7 +103,7 @@ customErrors[ApiError.User.PASSWORD_TOO_SHORT] = {
     EN: 'Password has to be at least 6 characters long',
     ES: 'La contraseña debe tener un largo de al menos 6',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.UNAUTHORIZED,
 };
 
 customErrors[ApiError.User.USER_ALREADY_EXISTS] = {
@@ -111,7 +112,7 @@ customErrors[ApiError.User.USER_ALREADY_EXISTS] = {
     EN: 'User already exists',
     ES: 'El usuario ya existe',
   },
-  HTTPStatusCode: 409,
+  HTTPStatusCode: StatusCodes.CONFLICT,
 };
 
 // Transaction
@@ -121,7 +122,7 @@ customErrors[ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_TYPE] = {
     EN: `Transaction and goal are not of the same type. (${FinancialGoalsType.SPEND_LESS} == ${TransactionType.INSTALLMENTS}|${TransactionType.EXPENSE} || ${FinancialGoalsType.SAVING} == ${TransactionType.SAVING}`,
     ES: `La transacción y el objetivo no son del mismo tipo. (${FinancialGoalsType.SPEND_LESS} == ${TransactionType.INSTALLMENTS}|${TransactionType.EXPENSE} || ${FinancialGoalsType.SAVING} == ${TransactionType.SAVING}`,
   },
-  HTTPStatusCode: 409,
+  HTTPStatusCode: StatusCodes.CONFLICT,
 };
 
 customErrors[ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_CURENCY] = {
@@ -130,7 +131,7 @@ customErrors[ApiError.Transaction.TRANSACTION_AND_GOAL_NOT_SAME_CURENCY] = {
     EN: 'Transaction and goal are not of the same currency.',
     ES: 'La transacción y la objetivo no tienen la misma moneda',
   },
-  HTTPStatusCode: 409,
+  HTTPStatusCode: StatusCodes.CONFLICT,
 };
 
 customErrors[ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE] = {
@@ -139,7 +140,7 @@ customErrors[ApiError.Transaction.TRANSACTION_AND_CATEGORY_NOT_SAME_TYPE] = {
     EN: 'Transaction and category are not of the same type.',
     ES: 'La transacción y la categoría no son del mismo tipo.',
   },
-  HTTPStatusCode: 409,
+  HTTPStatusCode: StatusCodes.CONFLICT,
 };
 
 customErrors[ApiError.Transaction.TRANSACTION_NOT_EXIST] = {
@@ -148,7 +149,7 @@ customErrors[ApiError.Transaction.TRANSACTION_NOT_EXIST] = {
     EN: 'Transaction not exist',
     ES: 'La transacción no existe',
   },
-  HTTPStatusCode: 404,
+  HTTPStatusCode: StatusCodes.NOT_FOUND,
 };
 
 // category
@@ -158,7 +159,7 @@ customErrors[ApiError.Category.CATEGORY_NOT_EXIST] = {
     EN: 'Category not exist',
     ES: 'La categoria no existe',
   },
-  HTTPStatusCode: 404,
+  HTTPStatusCode: StatusCodes.NOT_FOUND,
 };
 
 customErrors[ApiError.Category.CANNOT_DELETE_CATEGORY_TRASACTIONS] = {
@@ -167,7 +168,7 @@ customErrors[ApiError.Category.CANNOT_DELETE_CATEGORY_TRASACTIONS] = {
     EN: 'Cannot delete a category with trasactions, try with the query `?deleteTransactions=true` to delete all transactions.',
     ES: 'No se puede eliminar una categoría con transacciones, pruebe con la query `?deleteTransactions=true` para eliminar todas las transacciones',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.UNAUTHORIZED,
 };
 
 customErrors[ApiError.FinancialGoal.FINANCIAL_GOAL_NOT_EXIST] = {
@@ -176,7 +177,7 @@ customErrors[ApiError.FinancialGoal.FINANCIAL_GOAL_NOT_EXIST] = {
     EN: 'Financial goal not exist.',
     ES: 'El objetivo financiero no existe',
   },
-  HTTPStatusCode: 400,
+  HTTPStatusCode: StatusCodes.UNAUTHORIZED,
 };
 
 export { customErrors };
