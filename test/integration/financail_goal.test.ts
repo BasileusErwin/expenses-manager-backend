@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { StatusCodes } from 'http-status-codes';
 import { App } from '../../src/app';
 import { ApiError, CurrencyEnum, FinancialGoalsType } from '../../src/enums';
-import { financialGoalFactory } from '../factories/financial_goal.factory';
+import { financialGoalFactory } from '../factories';
 import { databaseHelper, FinancialGoalHelper, UserHelper } from '../helpers';
 import financialGoalMock from '../mock/financial_goal.json';
 

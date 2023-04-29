@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import { App } from '../../src/app';
 import { StatusCodes } from 'http-status-codes';
 import { ApiError, TransactionType } from '../../src/enums';
-import { categoryFactory } from '../factories/category.factory';
+import { categoryFactory } from '../factories';
 import { CategoryHelper, databaseHelper, UserHelper } from '../helpers';
 import categoryMock from '../mock/category.json';
 
