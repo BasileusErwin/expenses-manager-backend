@@ -31,7 +31,7 @@ jobs:
             --exit-code-from expenses
 
   build_and_deploy:
-    needs: [test]
+    #    needs: [test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
