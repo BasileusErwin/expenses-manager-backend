@@ -19,6 +19,8 @@ jobs:
             PORT=3000
             ENV=TEST
             DATABASE_URL=postgres://postgres:postgres@postgres/expenses-test
+            REDIS_URL=redis://redis:6379
+            SESSION_SECRET=test
           EOF
 
       - name: Run docker
