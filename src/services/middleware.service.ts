@@ -1,7 +1,7 @@
 import { ApiError } from '../enums';
 import { CustomError, logger } from '../lib';
 import { NextFunction, Request, Response } from 'express';
-import { redisClient } from 'src/redis';
+import { redisClient } from '../redis';
 
 function onlyLogin(_req: Request, res: Response, next: NextFunction) {
   if (!res.locals.userId) {
