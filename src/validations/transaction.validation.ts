@@ -47,7 +47,6 @@ const createTransaction = [
 ];
 
 const getTransaction = [
-  param('transactionId').isUUID(),
   query('month').optional().isIn(Object.values(MonthEnum)),
   query('day')
     .optional()
