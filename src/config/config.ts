@@ -3,5 +3,5 @@ export const config = {
   databaseUrl: process.env.DATABASE_URL,
   port: parseInt(process.env.PORT) || 3000,
   redisUrl: process.env.REDIS_URL,
-  sessionSecret: process.env.SESSION_SECRET
+  sessionSecret: process.env.SESSION_SECRET,
 };

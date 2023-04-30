@@ -62,7 +62,7 @@ describe('/api/users', () => {
 
       cookie = response.headers['set-cookie'][0].split(';')[0];
 
-      console.log(cookie)
+      console.log(cookie);
     });
 
     it('should not return cookie if send object empty', async () => {
@@ -113,5 +113,5 @@ describe('/api/users', () => {
 
   afterAll(async () => {
     await redisClient.quit();
-  })
+  });
 });

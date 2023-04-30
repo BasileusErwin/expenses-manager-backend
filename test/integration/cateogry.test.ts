@@ -19,7 +19,7 @@ describe('/api/cateogries', () => {
     await databaseHelper.destoryDatabase();
     await userHelper.createUserFromCSV();
 
-    redisClient.set(userHelper.sessionIdMock, userHelper.userIdMock)
+    redisClient.set(userHelper.sessionIdMock, userHelper.userIdMock);
   });
 
   describe('Create category', () => {

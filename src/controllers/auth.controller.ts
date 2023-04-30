@@ -13,7 +13,7 @@ async function login(req: Request, res: Response, next: NextFunction) {
     validationHelper.checkValidation(req);
 
     const { email, password }: LoginRequest = req.body;
-    const { sessionID } = req
+    const { sessionID } = req;
 
     const response = await authService.login(email, password, sessionID);
 

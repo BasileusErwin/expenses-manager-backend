@@ -26,7 +26,7 @@ async function login(email: string, password: string, sessionId: string): Promis
 }
 
 async function logout(token: string) {
-  await redisClient.del(token)
+  await redisClient.del(token);
 }
 
 export const authService = {
