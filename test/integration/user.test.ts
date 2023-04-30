@@ -2,6 +2,8 @@ import 'jest';
 import supertest from 'supertest';
 import { App } from '../../src/app';
 import { ApiError } from '../../src/enums';
+import { logger } from '../../src/lib';
+import { redisClient } from '../../src/redis';
 import { RegisterUserRequest } from '../../src/types/request/user';
 import { userFactory } from '../factories';
 import { databaseHelper, UserHelper } from '../helpers';
@@ -11,7 +13,7 @@ describe('/api/users', () => {
   let app: App;
   const user: RegisterUserRequest = userFactory.user;
   let userHelper: UserHelper;
-  let token: string;
+  let cookie: string;
 
   beforeAll(async () => {
     app = new App();
@@ -49,19 +51,21 @@ describe('/api/users', () => {
   });
 
   describe('Login', () => {
-    it('should return token session', async () => {
+    it('should return cookie session', async () => {
       const response = await userHelper.login({
         email: user.email,
         password: user.password,
       });
 
       expect(response.status).toBe(200);
-      expect(response.body.data.token).not.toBeUndefined();
+      expect(response.headers['set-cookie']).toBeDefined();
 
-      token = response.body.data.token;
+      cookie = response.headers['set-cookie'][0].split(';')[0];
+
+      console.log(cookie)
     });
 
-    it('should not return token if send object empty', async () => {
+    it('should not return cookie if send object empty', async () => {
       const response = await userHelper.login({
         email: '',
         password: '',
@@ -74,14 +78,14 @@ describe('/api/users', () => {
 
   describe('Get user info', () => {
     it('should return user data', async () => {
-      const response = await userHelper.getUser(token);
+      const response = await userHelper.getUser(cookie);
 
       expect(response.status).toBe(200);
       expect(response.body.result).toBeTruthy();
       expect(response.body.data).toMatchObject(userMock);
     });
 
-    it('should not return user data if not send user token', async () => {
+    it('should not return user data if not send user cookie', async () => {
       const response = await userHelper.getUser('');
 
       expect(response.status).toBe(401);
@@ -92,13 +96,13 @@ describe('/api/users', () => {
 
   describe('Logout', () => {
     it('should logout successfully', async () => {
-      const response = await userHelper.logout(token);
+      const response = await userHelper.logout(cookie);
 
       expect(response.status).toBe(200);
       expect(response.body.result).toBeTruthy();
     });
 
-    it('should not logout if send empty token', async () => {
+    it('should not logout if send empty cookie', async () => {
       const response = await userHelper.logout('');
 
       expect(response.status).toBe(401);
@@ -106,4 +110,8 @@ describe('/api/users', () => {
       expect(response.body.errorCode).toBe(ApiError.Auth.NEED_BE_LOGGED_IN);
     });
   });
+
+  afterAll(async () => {
+    await redisClient.quit();
+  })
 });

@@ -3,6 +3,7 @@ import 'jest';
 import supertest from 'supertest';
 import { App } from '../../src/app';
 import { ApiError, CurrencyEnum, TransactionType } from '../../src/enums';
+import { redisClient } from '../../src/redis';
 import { transactionFactory } from '../factories';
 import { CategoryHelper, databaseHelper, TransactionHelper, UserHelper } from '../helpers';
 
@@ -10,14 +11,16 @@ describe('/api/transactions', () => {
   const app: App = new App();
   const request = supertest(app.server);
   const userHelper: UserHelper = new UserHelper(request);
-  const categoryHelper: CategoryHelper = new CategoryHelper(request, userHelper.tokenMock);
-  const transactionHelper: TransactionHelper = new TransactionHelper(request, userHelper.tokenMock);
+  const categoryHelper: CategoryHelper = new CategoryHelper(request, userHelper.cookieMock);
+  const transactionHelper: TransactionHelper = new TransactionHelper(request, userHelper.cookieMock);
 
   beforeAll(async () => {
     await app.connectToDatabase();
     await databaseHelper.destoryDatabase();
     await userHelper.createUserFromCSV();
     await categoryHelper.createUserFromCSV(userHelper.userIdMock);
+
+    redisClient.set(userHelper.sessionIdMock, userHelper.userIdMock)
   });
 
   describe('Create Transaction type Expenses', () => {

@@ -6,22 +6,20 @@ import { ApiError, CurrencyEnum, FinancialGoalsType } from '../../src/enums';
 import { financialGoalFactory } from '../factories';
 import { databaseHelper, FinancialGoalHelper, UserHelper } from '../helpers';
 import financialGoalMock from '../mock/financial_goal.json';
+import { redisClient } from '../../src/redis';
 
 describe('/api/financial_goals', () => {
   const app: App = new App();
-  let userHelper: UserHelper;
-  let financialGoalHelper: FinancialGoalHelper;
+  const request = supertest(app.server);
+  const userHelper: UserHelper = new UserHelper(request);
+  const financialGoalHelper: FinancialGoalHelper = new FinancialGoalHelper(request, userHelper.cookieMock);
 
   beforeAll(async () => {
-    const request = supertest(app.server);
-
     await app.connectToDatabase();
     await databaseHelper.destoryDatabase();
-
-    userHelper = new UserHelper(request);
     await userHelper.createUserFromCSV();
 
-    financialGoalHelper = new FinancialGoalHelper(request, userHelper.tokenMock);
+    redisClient.set(userHelper.sessionIdMock, userHelper.userIdMock)
   });
 
   describe('Create financial goal', () => {

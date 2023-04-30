@@ -1,15 +1,16 @@
-import { StatusCodes } from "http-status-codes";
-import "jest";
-import supertest from "supertest";
 import { App } from "../../../../src/app";
 import { ApiError, CurrencyEnum, TransactionType } from "../../../../src/enums";
 import { transactionFactory } from "../../../factories";
 import {
   CategoryHelper,
-  databaseHelper,
   TransactionHelper,
   UserHelper,
+  databaseHelper,
 } from "../../../helpers";
+import { StatusCodes } from "http-status-codes";
+import "jest";
+import supertest from "supertest";
+import { redisClient } from "../../../../src/redis";
 
 describe("/api/transactions Simple Saving", () => {
   const app: App = new App();
@@ -17,11 +18,11 @@ describe("/api/transactions Simple Saving", () => {
   const userHelper: UserHelper = new UserHelper(request);
   const categoryHelper: CategoryHelper = new CategoryHelper(
     request,
-    userHelper.tokenMock
+    userHelper.cookieMock
   );
   const transactionHelper: TransactionHelper = new TransactionHelper(
     request,
-    userHelper.tokenMock
+    userHelper.cookieMock
   );
 
   beforeAll(async () => {
@@ -29,6 +30,8 @@ describe("/api/transactions Simple Saving", () => {
     await databaseHelper.destoryDatabase();
     await userHelper.createUserFromCSV();
     await categoryHelper.createUserFromCSV(userHelper.userIdMock);
+
+    redisClient.set(userHelper.sessionIdMock, userHelper.userIdMock)
   });
 
   describe("Create transaction type Saving ", () => {

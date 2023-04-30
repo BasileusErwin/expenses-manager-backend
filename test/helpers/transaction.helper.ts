@@ -6,18 +6,16 @@ import { RequestOptions } from '../types';
 
 export class TransactionHelper extends Helper {
   private endpoint: string = '/api/transactions';
-  readonly userToken: string;
 
-  constructor(request: SuperTest<Request>, userToken: string) {
-    super(request);
-    this.userToken = userToken;
+  constructor(request: SuperTest<Request>, cookie: string) {
+    super(request, cookie);
   }
 
   public async createTransaction(body: CreateTransactionRequest, options: RequestOptions): Promise<Response> {
     const request = this.request.post(this.endpoint).set(genericFactory.buildHeader());
 
     if (!options.notIncludeToken) {
-      request.set('Cookie', `token=${this.userToken}`);
+      request.set('Cookie', this.cookieMock);
     }
 
     return await request.send(body);

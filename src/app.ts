@@ -1,16 +1,17 @@
 import 'reflect-metadata';
 import express, { NextFunction } from 'express';
+import session from 'express-session';
+import helmet from 'helmet';
 import { Request, Response } from 'express-serve-static-core';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
 import { config } from './config';
 import { routerIndex } from './routes';
 import { sequelize } from './models';
 import { ApiError } from './enums';
 import { customErrors, CustomError, CustomResponse, logger } from './lib';
-import helmet from 'helmet';
+import { redisKeyLifetime, redisStore } from './redis';
 
 const exceptionMiddleware = <T extends Error>(err: T, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof CustomError) {
@@ -43,7 +44,6 @@ export class App {
   public async connectToDatabase() {
     try {
       await sequelize().authenticate();
-      logger.info('database_connection_succesful');
     } catch (error) {
       logger.error(error, 'database_connection_failed');
       throw error;
@@ -60,10 +60,20 @@ export class App {
 
   private configureMiddleware() {
     this.server.use(bodyParser.json());
-    this.server.use(bodyParser.urlencoded({ extended: false }));
+    this.server.use(bodyParser.urlencoded({ extended: true }));
     this.server.use(helmet());
     this.server.use(cors());
-    this.server.use(cookieParser());
+
+    this.server.use(session({
+      store: redisStore,
+      resave: false,
+      saveUninitialized: true,
+      secret: config.sessionSecret,
+      name: 'sessionID',
+      cookie: {
+        maxAge: redisKeyLifetime
+      }
+    }))
   }
 
   private configureRoutes() {

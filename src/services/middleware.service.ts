@@ -1,7 +1,7 @@
 import { ApiError } from '../enums';
 import { CustomError, logger } from '../lib';
-import { SessionModel, UserModel } from '../models';
 import { NextFunction, Request, Response } from 'express';
+import { redisClient } from 'src/redis';
 
 function onlyLogin(_req: Request, res: Response, next: NextFunction) {
   if (!res.locals.userId) {
@@ -12,7 +12,7 @@ function onlyLogin(_req: Request, res: Response, next: NextFunction) {
 }
 
 async function authorization(req: Request, res: Response, next: NextFunction) {
-  const { token } = req.cookies;
+  const token = req.sessionID;
 
   logger.debug({ token });
 
@@ -20,24 +20,13 @@ async function authorization(req: Request, res: Response, next: NextFunction) {
     return next();
   }
 
-  const session: SessionModel = await SessionModel.findOne({
-    where: {
-      token,
-    },
-    include: [
-      {
-        model: UserModel,
-      },
-    ],
-  });
+  const userId = await redisClient.get(token);
 
-  logger.debug({ session });
-
-  if (!session?.user) {
-    throw new CustomError(ApiError.Auth.EXPIRED_TOKEN);
+  if (!userId) {
+    return next();
   }
 
-  res.locals.userId = session.userId;
+  res.locals.userId = userId;
 
   next();
 }

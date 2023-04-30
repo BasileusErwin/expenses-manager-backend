@@ -4,6 +4,7 @@ dotenv.config();
 import { config } from './config';
 import { App } from './app';
 import { logger, umzug } from './lib';
+import { redisClient } from './redis';
 
 const port = config.port;
 const app = new App();
@@ -30,3 +31,4 @@ const handleDisconnect = () => {
 };
 
 handleDisconnect();
+

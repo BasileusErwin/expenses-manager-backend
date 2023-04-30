@@ -1,9 +1,19 @@
 version: "3.9"
 
 services:
+  redis:
+    image: redis:7.0-alpine
+    container_name: expenses-redis-test
+    restart: always
+    ports:
+      - 6379:6379
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./.redis:/data
+
   postgres:
     image: postgres:14-alpine
-    container_name: postgres
+    container_name: express-postgres-test
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: expenses-test
@@ -23,4 +33,5 @@ services:
       - $PORT:$PORT
     depends_on:
       - postgres
+      - redis
     command: sh -c "yarn install && yarn test"

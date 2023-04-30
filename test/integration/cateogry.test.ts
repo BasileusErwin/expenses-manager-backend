@@ -6,22 +6,20 @@ import { ApiError, TransactionType } from '../../src/enums';
 import { categoryFactory } from '../factories';
 import { CategoryHelper, databaseHelper, UserHelper } from '../helpers';
 import categoryMock from '../mock/category.json';
+import { redisClient } from '../../src/redis';
 
 describe('/api/cateogries', () => {
   const app: App = new App();
-  let userHelper: UserHelper;
-  let categoryHelper: CategoryHelper;
+  const request = supertest(app.server);
+  const userHelper: UserHelper = new UserHelper(request);
+  const categoryHelper: CategoryHelper = new CategoryHelper(request, userHelper.cookieMock);
 
   beforeAll(async () => {
-    const request = supertest(app.server);
-
     await app.connectToDatabase();
     await databaseHelper.destoryDatabase();
-
-    userHelper = new UserHelper(request);
     await userHelper.createUserFromCSV();
 
-    categoryHelper = new CategoryHelper(request, userHelper.tokenMock);
+    redisClient.set(userHelper.sessionIdMock, userHelper.userIdMock)
   });
 
   describe('Create category', () => {

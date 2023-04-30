@@ -1,12 +1,11 @@
 import { userService } from '.';
 import { ApiError } from '../enums';
 import { CustomError, logger } from '../lib';
-import { SessionModel } from '../models';
 import { UserDTO } from '../types/DTOs';
 import { PasswordUtil } from '../utils';
-import { randomBytes } from 'crypto';
+import { redisClient, redisKeyLifetime } from '../redis';
 
-async function login(email: string, password: string): Promise<{ token: string; user: UserDTO }> {
+async function login(email: string, password: string, sessionId: string): Promise<UserDTO> {
   logger.info(`Login email: ${email}`);
   const user: UserDTO = await userService.getUser({ email });
 
@@ -19,35 +18,15 @@ async function login(email: string, password: string): Promise<{ token: string; 
     throw new CustomError(ApiError.Auth.BAD_AUTH);
   }
 
-  await SessionModel.destroy({
-    where: {
-      userId: user.userId,
-    },
+  await redisClient.set(sessionId, user.userId, {
+    EX: redisKeyLifetime,
   });
 
-  const token: string = await new Promise<string>((resolve, reject) =>
-    randomBytes(50, (err, buffer) => {
-      if (err) {
-        throw reject(err);
-      }
-      resolve(buffer.toString('hex'));
-    }),
-  );
-
-  await SessionModel.create({
-    userId: user.userId,
-    token,
-  });
-
-  return { token, user };
+  return user;
 }
 
 async function logout(token: string) {
-  await SessionModel.destroy({
-    where: {
-      token,
-    },
-  });
+  await redisClient.del(token)
 }
 
 export const authService = {
