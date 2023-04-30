@@ -12,6 +12,4 @@ It is deployed in [Railway](railway.app) and is running on Docker.
 In development we used docker-compose to build the whole project. And to run the tests in Github Actions
 
 ## Diagram
-
-![diagram](https://github.com/BasileusErwin/expenses-project/tree/main/.github/assets/expenses-project.svg)
-
+![Diagram](https://expenses-github-assets.s3.amazonaws.com/Expense+project.svg)
