@@ -24,7 +24,7 @@ async function authorization(req: Request, res: Response, next: NextFunction) {
 
   logger.debug({
     userId,
-  })
+  });
 
   if (!userId) {
     return next();

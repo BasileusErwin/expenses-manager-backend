@@ -13,8 +13,8 @@ export class UserHelper extends Helper {
   constructor(request: SuperTest<Request>) {
     super(
       request,
-      'sessionID=s%3A2YDn3FaFbkn76oZuHDccyM_mwYv6Xzn_.mxQGXbQRwkpECY0Ixre9KwEvxhjcABgc%2BXZeEyXOOyI; Path=/; HttpOnly; Expires=Sat, 03 Jun 2023 14:03:03 GMT;'
-    )
+      'sessionID=s%3A2YDn3FaFbkn76oZuHDccyM_mwYv6Xzn_.mxQGXbQRwkpECY0Ixre9KwEvxhjcABgc%2BXZeEyXOOyI; Path=/; HttpOnly; Expires=Sat, 03 Jun 2023 14:03:03 GMT;',
+    );
   }
 
   public async createUser(body: RegisterUserRequest): Promise<Response> {
