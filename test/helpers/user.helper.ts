@@ -8,13 +8,13 @@ import { SessionCSV, UserCSV } from '../../src/types/csv';
 
 export class UserHelper extends Helper {
   readonly userIdMock: string = '255752d5-f350-4b33-ab70-7ad5c8c54650';
-  readonly sessionIdMock: string = 'zswNEfFE2W8kw7jW7qHgSLU_v9Tbzpkk';
+  readonly sessionIdMock: string = '2YDn3FaFbkn76oZuHDccyM_mwYv6Xzn_';
 
   constructor(request: SuperTest<Request>) {
     super(
       request,
-      'sessionID=s%3AzswNEfFE2W8kw7jW7qHgSLU_v9Tbzpkk.jHniJFHzLuN%2BIxkd%2F2H%2F%2FvOFHujbA%2BUkvFpzetBOuIs',
-    );
+      'sessionID=s%3A2YDn3FaFbkn76oZuHDccyM_mwYv6Xzn_.mxQGXbQRwkpECY0Ixre9KwEvxhjcABgc%2BXZeEyXOOyI; Path=/; HttpOnly; Expires=Sat, 03 Jun 2023 14:03:03 GMT;'
+    )
   }
 
   public async createUser(body: RegisterUserRequest): Promise<Response> {

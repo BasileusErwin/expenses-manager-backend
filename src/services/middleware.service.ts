@@ -22,6 +22,10 @@ async function authorization(req: Request, res: Response, next: NextFunction) {
 
   const userId = await redisClient.get(`user:${sessionId}`);
 
+  logger.debug({
+    userId,
+  })
+
   if (!userId) {
     return next();
   }
