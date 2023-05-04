@@ -1,3 +1,4 @@
+import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
 import { CategoryModel, FinancialGoalModel, sequelize, TransactionModel } from '../models';
 import { CreateTransactionRequest } from '../types/request/trsactions';
 import { Balances, TransactionBalances } from '../types/response/transactions';
@@ -6,8 +7,7 @@ import { categoryService, financialGoalService } from '.';
 import { CustomError, logger } from '../lib';
 import { ApiError, CurrencyEnum, FinancialGoalsType, MonthEnum, TransactionType } from '../enums';
 import { plainToInstance } from 'class-transformer';
-import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
-import { redisClient } from 'src/redis';
+import { redisClient } from '../redis';
 
 async function deleteTransaction(transactionId: string) {
   const transaction = await getTrasaction(
