@@ -19,19 +19,19 @@ export class TransactionsRedisMetadata<T> implements RedisMetadata<T, Transactio
   }
 
   public queryIsEqualToData(where: TransactionMetadata): boolean {
-    if (this?.metadata.type !== where.type) {
+    if (this?.metadata?.type !== where?.type) {
       return false;
     }
 
-    if (this?.metadata.day !== where.day) {
+    if (this?.metadata?.day !== where?.day) {
       return false;
     }
 
-    if (this?.metadata.month !== where.month) {
+    if (this?.metadata?.month !== where?.month) {
       return false;
     }
 
-    if (this?.metadata.year !== where.year) {
+    if (this?.metadata?.year !== where?.year) {
       return false;
     }
 
