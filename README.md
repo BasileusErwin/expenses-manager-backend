@@ -13,7 +13,7 @@ In development we used docker-compose to build the whole project. And to run the
 
 ## Diagrams
 
-![Diagram](https://expenses-github-assets.s3.amazonaws.com/expense-project.png)
+![Backend diagram](https://expenses-github-assets.s3.amazonaws.com/expense-project.png)
 
 ### Diagram of database
 
