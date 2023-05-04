@@ -2,10 +2,11 @@ import { CurrencyEnum, MonthEnum, TransactionType } from '../enums';
 import { CreateTransactionRequest } from '../types/request/trsactions';
 import { ValidationError } from 'express-validator';
 import { dayHelper } from './day.helper';
+import { Request, Response } from 'express';
 
-const createTransactionValidation = (
+function createTransactionValidation(
   transactions: CreateTransactionRequest[],
-): Omit<ValidationError, 'location' | 'nestedErrors'>[] => {
+): Omit<ValidationError, 'location' | 'nestedErrors'>[] {
   const error: Omit<ValidationError, 'location' | 'nestedErrors'>[] = [];
 
   for (const [index, transaction] of transactions.entries()) {
@@ -112,8 +113,41 @@ const createTransactionValidation = (
   }
 
   return error;
-};
+}
+
+interface TransactionQuery {
+  userId: string;
+  type?: TransactionType;
+  day?: number;
+  month?: MonthEnum;
+  year?: number;
+}
+
+function getQueryInGetTransaction(req: Request, { locals }: Response): TransactionQuery {
+  const where: TransactionQuery = {
+    userId: locals.userId,
+  };
+
+  if (req.query.type) {
+    where.type = TransactionType[req.query.type as string];
+  }
+
+  if (req.query.month) {
+    where.month = MonthEnum[req.query.month as string];
+  }
+
+  if (req.query.day) {
+    where.day = +req.query.day;
+  }
+
+  if (req.query.year) {
+    where.year = +req.query.year;
+  }
+
+  return where;
+}
 
 export const transactionHelper = {
   createTransactionValidation,
+  getQueryInGetTransaction,
 };

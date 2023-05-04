@@ -1,4 +1,4 @@
-import { ApiError, MonthEnum, TransactionType } from '../enums';
+import { ApiError, TransactionType } from '../enums';
 import { transactionHelper, validationHelper } from '../helpers';
 import { CustomError, CustomResponse, logger } from '../lib';
 import { CategoryModel, TransactionModel } from '../models';
@@ -8,6 +8,7 @@ import { CreateTransactionRequest } from '../types/request/trsactions';
 import { NextFunction, Request, Response } from 'express';
 import { WhereOptions } from 'sequelize';
 import { TransactionBalances } from '../types/response/transactions';
+import { TransactionMetadata, TransactionsRedisMetadata } from '../types/redis_types';
 
 async function createTransaction(req: Request, res: Response, next: NextFunction) {
   try {
@@ -85,56 +86,51 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
   try {
     validationHelper.checkValidation(req);
 
-    const { userId } = res.locals;
-    const { day, month, year, type, balance } = req.query;
+    const where = transactionHelper.getQueryInGetTransaction(req, res);
 
-    const transactionsInRedis = await transactionService.getTransactionsInRedis(userId);
+    const transationsInRedis = await transactionService.getTransactionsInRedis(where.userId);
 
-    if (transactionsInRedis && !balance) {
-      return res.send(new CustomResponse(true, transactionsInRedis));
+    if (transationsInRedis?.queryIsEqualToData(where)) {
+      return res.send(new CustomResponse(true, transationsInRedis.object));
     }
 
-    const where: WhereOptions<TransactionModel> = {
-      userId,
-    };
+    const transactions = await transactionService.getAllTrasactions(where as WhereOptions<TransactionModel>, [
+      {
+        model: CategoryModel,
+      },
+    ]);
 
-    if (type) {
-      where.type = TransactionType[type as string];
+    await transactionService.setTransactionsInRedis(transactions, where.userId, where as TransactionMetadata);
+
+    res.send(new CustomResponse(true, transactions));
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getTransactionBalance(req: Request, res: Response, next: NextFunction) {
+  try {
+    validationHelper.checkValidation(req);
+
+    const where = transactionHelper.getQueryInGetTransaction(req, res);
+
+    const balanceInRedis: TransactionsRedisMetadata<TransactionBalances> =
+      await transactionService.getBalanceTransactionInRedis(where.userId);
+
+    if (
+      balanceInRedis &&
+      new TransactionsRedisMetadata(balanceInRedis.object, balanceInRedis.metadata).queryIsEqualToData(where)
+    ) {
+      return res.send(new CustomResponse(true, balanceInRedis.object));
     }
 
-    if (month) {
-      where.month = month as MonthEnum;
-    }
+    const transactions = await transactionService.getBalance(where.month);
 
-    if (day) {
-      where.day = +day;
-    }
-
-    if (year) {
-      where.year = +year;
-    }
-
-    let transactions: TransactionDTO[] | TransactionBalances;
-
-    if (balance) {
-      const balanceInRedis = await transactionService.getBalanceTransactionInRedis(userId);
-
-      if (balanceInRedis) {
-        return res.send(new CustomResponse(true, balanceInRedis));
-      }
-
-      transactions = await transactionService.getBalance(month as MonthEnum);
-
-      await transactionService.setBalanceTransactionInRedis(transactions, userId);
-    } else {
-      transactions = await transactionService.getAllTrasactions(where, [
-        {
-          model: CategoryModel,
-        },
-      ]);
-
-      await transactionService.setTransactionsInRedis(transactions, userId);
-    }
+    await transactionService.setBalanceTransactionInRedis(
+      transactions,
+      where.userId,
+      where as TransactionMetadata,
+    );
 
     res.send(new CustomResponse(true, transactions));
   } catch (err) {
@@ -212,6 +208,7 @@ export const transactionController = {
   createTransaction,
   getTransactionById,
   getAllTransactionsByUserId,
+  getTransactionBalance,
   deleteTrasactions,
   getMonthsAndYears,
   getTotalSavings,

@@ -10,6 +10,11 @@ router
   .get(transactionValidation.getTransaction, transactionController.getAllTransactionsByUserId)
   .post(transactionValidation.createTransaction, transactionController.createTransaction);
 
+router
+  .route('/balance')
+  .all(middlewareController.onlyLogin)
+  .get(transactionValidation.getTransaction, transactionController.getTransactionBalance);
+
 router.route('/total-saving').all(middlewareController.onlyLogin).get(transactionController.getTotalSavings);
 
 router

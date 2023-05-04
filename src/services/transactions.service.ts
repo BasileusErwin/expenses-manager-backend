@@ -8,6 +8,7 @@ import { CustomError, logger } from '../lib';
 import { ApiError, CurrencyEnum, FinancialGoalsType, MonthEnum, TransactionType } from '../enums';
 import { plainToInstance } from 'class-transformer';
 import { redisClient } from '../redis';
+import { TransactionsRedisMetadata, TransactionMetadata } from '../types/redis_types';
 
 async function deleteTransaction(transactionId: string) {
   const transaction = await getTrasaction(
@@ -383,28 +384,46 @@ async function setGoalIdInTransaction(transactionId: string, goalId: string, use
   );
 }
 
-async function getTransactionsInRedis(userId: string): Promise<TransactionDTO[]> {
-  const transactions = await redisClient.get(`transactions:${userId}`);
+async function getTransactionsInRedis(userId: string): Promise<TransactionsRedisMetadata<TransactionDTO[]>> {
+  const transactions: string = await redisClient.get(`transactions:${userId}`);
 
   return JSON.parse(transactions);
 }
 
-async function setTransactionsInRedis(transactions: TransactionDTO[], userId: string) {
-  await redisClient.set(`transaction:${userId}`, JSON.stringify(transactions), {
-    EX: 30 * 60 * 1000, // 30 min
-  });
+async function setTransactionsInRedis(
+  transactions: TransactionDTO[],
+  userId: string,
+  metadata: TransactionMetadata,
+) {
+  await redisClient.set(
+    `transaction:${userId}`,
+    JSON.stringify(new TransactionsRedisMetadata(transactions, metadata)),
+    {
+      EX: 30 * 60 * 1000, // 30 min
+    },
+  );
 }
 
-async function getBalanceTransactionInRedis(userId: string): Promise<TransactionBalances> {
-  const transactions = await redisClient.get(`balance:${userId}`);
+async function getBalanceTransactionInRedis(
+  userId: string,
+): Promise<TransactionsRedisMetadata<TransactionBalances>> {
+  const balance: string = await redisClient.get(`balance:${userId}`);
 
-  return JSON.parse(transactions);
+  return JSON.parse(balance);
 }
 
-async function setBalanceTransactionInRedis(transactions: TransactionBalances, userId: string) {
-  await redisClient.set(`balance:${userId}`, JSON.stringify(transactions), {
-    EX: 30 * 60 * 1000, // 30 min
-  });
+async function setBalanceTransactionInRedis(
+  transactions: TransactionBalances,
+  userId: string,
+  metadata: TransactionMetadata,
+) {
+  await redisClient.set(
+    `balance:${userId}`,
+    JSON.stringify(new TransactionsRedisMetadata(transactions, metadata)),
+    {
+      EX: 30 * 60 * 1000, // 30 min
+    },
+  );
 }
 
 export const transactionService = {
