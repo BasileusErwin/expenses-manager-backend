@@ -9,7 +9,7 @@ It is made with Node.js and TypeScript with Express.js framework, sequelize as O
 and [Rome](https://rome.tools) as linter and formatter. And as database PostgreSQL and Redis for the sessions.
 
 It is deployed in [Railway](https://railway.app) and is running on Docker.
-In development we used docker-compose to build the whole project. And to run the tests in Github Actions
+In development we used docker-compose to build the whole project. And to run the tests in Github Actions.
 
 ## Diagrams
 
