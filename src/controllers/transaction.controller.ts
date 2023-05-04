@@ -88,6 +88,12 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
     const { userId } = res.locals;
     const { day, month, year, type, balance } = req.query;
 
+    const transactionsInRedis = await transactionService.getTransactionsInRedis(userId);
+
+    if (transactionsInRedis && !balance) {
+      return res.send(new CustomResponse(true, transactionsInRedis));
+    }
+
     const where: WhereOptions<TransactionModel> = {
       userId,
     };
@@ -107,16 +113,27 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
     if (year) {
       where.year = +year;
     }
+
     let transactions: TransactionDTO[] | TransactionBalances;
 
     if (balance) {
-      transactions = await transactionService.calculateBalances(month as MonthEnum);
+      const balanceInRedis = await transactionService.getBalanceTransactionInRedis(userId);
+
+      if (balanceInRedis) {
+        return res.send(new CustomResponse(true, balanceInRedis));
+      }
+
+      transactions = await transactionService.getBalance(month as MonthEnum);
+
+      await transactionService.setBalanceTransactionInRedis(transactions, userId);
     } else {
       transactions = await transactionService.getAllTrasactions(where, [
         {
           model: CategoryModel,
         },
       ]);
+
+      await transactionService.setTransactionsInRedis(transactions, userId);
     }
 
     res.send(new CustomResponse(true, transactions));

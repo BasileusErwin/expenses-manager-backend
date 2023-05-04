@@ -12,15 +12,15 @@ function onlyLogin(_req: Request, res: Response, next: NextFunction) {
 }
 
 async function authorization(req: Request, res: Response, next: NextFunction) {
-  const token = req.sessionID;
+  const sessionId = req.sessionID;
 
-  logger.debug({ token });
+  logger.debug({ sessionId });
 
-  if (!token) {
+  if (!sessionId) {
     return next();
   }
 
-  const userId = await redisClient.get(token);
+  const userId = await redisClient.get(sessionId);
 
   if (!userId) {
     return next();

@@ -7,6 +7,7 @@ import { CustomError, logger } from '../lib';
 import { ApiError, CurrencyEnum, FinancialGoalsType, MonthEnum, TransactionType } from '../enums';
 import { plainToInstance } from 'class-transformer';
 import { IncludeOptions, Transaction, WhereOptions } from 'sequelize';
+import { redisClient } from 'src/redis';
 
 async function deleteTransaction(transactionId: string) {
   const transaction = await getTrasaction(
@@ -171,7 +172,7 @@ async function createTransaction(
   }
 }
 
-async function calculateBalances(month: MonthEnum): Promise<TransactionBalances> {
+async function getBalance(month: MonthEnum): Promise<TransactionBalances> {
   const transactions = await getAllTrasactions(
     month
       ? {
@@ -181,6 +182,10 @@ async function calculateBalances(month: MonthEnum): Promise<TransactionBalances>
     [],
   );
 
+  return calculateBalances(transactions);
+}
+
+function calculateBalances(transactions: TransactionDTO[]): TransactionBalances {
   const expenses: Balances = {
     total: 0,
     eur: 0,
@@ -253,10 +258,6 @@ async function getAllTrasactions(
   const trasactions = await TransactionModel.findAll({
     where,
     include,
-  });
-
-  logger.debug({
-    trasactions,
   });
 
   return plainToInstance(TransactionDTO, trasactions);
@@ -382,6 +383,30 @@ async function setGoalIdInTransaction(transactionId: string, goalId: string, use
   );
 }
 
+async function getTransactionsInRedis(userId: string): Promise<TransactionDTO[]> {
+  const transactions = await redisClient.get(`transactions:${userId}`);
+
+  return JSON.parse(transactions);
+}
+
+async function setTransactionsInRedis(transactions: TransactionDTO[], userId: string) {
+  await redisClient.set(`transaction:${userId}`, JSON.stringify(transactions), {
+    EX: 30 * 60 * 1000, // 30 min
+  });
+}
+
+async function getBalanceTransactionInRedis(userId: string): Promise<TransactionBalances> {
+  const transactions = await redisClient.get(`balance:${userId}`);
+
+  return JSON.parse(transactions);
+}
+
+async function setBalanceTransactionInRedis(transactions: TransactionBalances, userId: string) {
+  await redisClient.set(`balance:${userId}`, JSON.stringify(transactions), {
+    EX: 30 * 60 * 1000, // 30 min
+  });
+}
+
 export const transactionService = {
   deleteTransaction,
   createTransaction,
@@ -391,5 +416,10 @@ export const transactionService = {
   getMonthsAndYears,
   calculateBalances,
   updateTransaction,
+  getBalance,
   setGoalIdInTransaction,
+  getTransactionsInRedis,
+  setTransactionsInRedis,
+  getBalanceTransactionInRedis,
+  setBalanceTransactionInRedis,
 };

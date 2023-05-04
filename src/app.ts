@@ -71,7 +71,7 @@ export class App {
       secret: config.sessionSecret,
       name: 'sessionID',
       cookie: {
-        maxAge: redisKeyLifetime
+        maxAge: redisKeyLifetime,
       }
     }))
   }
