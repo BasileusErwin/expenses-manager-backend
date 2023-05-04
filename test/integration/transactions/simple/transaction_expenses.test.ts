@@ -20,7 +20,7 @@ describe('/api/transactions Simple Expenses', () => {
     await userHelper.createUserFromCSV();
     await categoryHelper.createUserFromCSV(userHelper.userIdMock);
 
-    await redisClient.set(userHelper.sessionIdMock, userHelper.userIdMock);
+    await redisClient.set(`user:${userHelper.sessionIdMock}`, userHelper.userIdMock);
   });
 
   describe('Create Transaction type Expenses', () => {

@@ -1,10 +1,10 @@
+import 'jest';
+import supertest from 'supertest';
 import { App } from '../../../../src/app';
 import { ApiError, CurrencyEnum, TransactionType } from '../../../../src/enums';
 import { transactionFactory } from '../../../factories';
 import { CategoryHelper, TransactionHelper, UserHelper, databaseHelper } from '../../../helpers';
 import { StatusCodes } from 'http-status-codes';
-import 'jest';
-import supertest from 'supertest';
 import { redisClient } from '../../../../src/redis';
 
 describe('/api/transactions Simple Saving', () => {
@@ -20,7 +20,7 @@ describe('/api/transactions Simple Saving', () => {
     await userHelper.createUserFromCSV();
     await categoryHelper.createUserFromCSV(userHelper.userIdMock);
 
-    await redisClient.set(userHelper.sessionIdMock, userHelper.userIdMock);
+    await redisClient.set(`user:${userHelper.sessionIdMock}`, userHelper.userIdMock);
   });
 
   describe('Create transaction type Saving ', () => {

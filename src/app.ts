@@ -64,16 +64,18 @@ export class App {
     this.server.use(helmet());
     this.server.use(cors());
 
-    this.server.use(session({
-      store: redisStore,
-      resave: false,
-      saveUninitialized: true,
-      secret: config.sessionSecret,
-      name: 'sessionID',
-      cookie: {
-        maxAge: redisKeyLifetime,
-      }
-    }))
+    this.server.use(
+      session({
+        store: redisStore,
+        resave: false,
+        saveUninitialized: true,
+        secret: config.sessionSecret,
+        name: 'sessionID',
+        cookie: {
+          maxAge: redisKeyLifetime,
+        },
+      }),
+    );
   }
 
   private configureRoutes() {

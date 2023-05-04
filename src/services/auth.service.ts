@@ -18,9 +18,11 @@ async function login(email: string, password: string, sessionId: string): Promis
     throw new CustomError(ApiError.Auth.BAD_AUTH);
   }
 
-  await redisClient.set(sessionId, user.userId, {
+  await redisClient.set(`user:${sessionId}`, user.userId, {
     EX: redisKeyLifetime,
   });
+
+  await redisClient.del(sessionId);
 
   return user;
 }

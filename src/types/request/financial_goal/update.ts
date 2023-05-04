@@ -1,4 +1,4 @@
-import { CurrencyEnum, FinancialGoalsType, MonthEnum } from "../../../enums/index";
+import { CurrencyEnum, FinancialGoalsType, MonthEnum } from '../../../enums/index';
 
 export interface UpdateOptions {
   type?: FinancialGoalsType;

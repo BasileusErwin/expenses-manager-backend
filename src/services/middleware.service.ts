@@ -20,7 +20,7 @@ async function authorization(req: Request, res: Response, next: NextFunction) {
     return next();
   }
 
-  const userId = await redisClient.get(sessionId);
+  const userId = await redisClient.get(`user:${sessionId}`);
 
   if (!userId) {
     return next();
