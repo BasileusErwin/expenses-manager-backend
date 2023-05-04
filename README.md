@@ -13,11 +13,11 @@ In development we used docker-compose to build the whole project. And to run the
 
 ## Diagrams
 
-![Backend diagram](https://expenses-github-assets.s3.amazonaws.com/expense-project.png)
+![Backend diagram](https://expenses-github-assets.s3.amazonaws.com/expense-manager-backend-diagram.png)
 
 ### Diagram of database
 
 - [Diagram in dbdiagram](https://dbdiagram.io/d/63c448db296d97641d79c610)
 - [Dbdoc](https://dbdocs.io/ignacio.perez2123/Expenses-Manager)
 
-![Diagram of database](https://expenses-github-assets.s3.amazonaws.com/expenses-managar-database.png)
+![Diagram of database](https://expenses-github-assets.s3.amazonaws.com/expenses-managar-database-diagram.png)
