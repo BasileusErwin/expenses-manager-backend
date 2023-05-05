@@ -186,6 +186,28 @@ async function getBalance(month: MonthEnum): Promise<TransactionBalances> {
   return calculateBalances(transactions);
 }
 
+function calculateBalance(transaction: TransactionDTO, balances: Balances) {
+  switch (transaction.currency) {
+    case CurrencyEnum.UYU:
+      balances.uyu += transaction.amount;
+      balances.total += transaction.amount;
+      break;
+    case CurrencyEnum.USD:
+      balances.usd += transaction.amount;
+      balances.total += transaction.amount * transaction.exchangeRate;
+      break;
+    case CurrencyEnum.EUR:
+      balances.eur += transaction.amount;
+      balances.total += transaction.amount * transaction.exchangeRate;
+      break;
+  }
+
+  balances.total = +balances.total.toFixed(2);
+  balances.eur = +balances.eur.toFixed(2);
+  balances.usd = +balances.usd.toFixed(2);
+  balances.uyu = +balances.uyu.toFixed(2);
+}
+
 function calculateBalances(transactions: TransactionDTO[]): TransactionBalances {
   const expenses: Balances = {
     total: 0,
@@ -208,39 +230,17 @@ function calculateBalances(transactions: TransactionDTO[]): TransactionBalances 
     uyu: 0,
   };
 
-  const getBalance = (transaction: TransactionDTO, balances: Balances) => {
-    switch (transaction.currency) {
-      case CurrencyEnum.UYU:
-        balances.uyu += transaction.amount;
-        balances.total += transaction.amount;
-        break;
-      case CurrencyEnum.USD:
-        balances.usd += transaction.amount;
-        balances.total += transaction.amount * transaction.exchangeRate;
-        break;
-      case CurrencyEnum.EUR:
-        balances.eur += transaction.amount;
-        balances.total += transaction.amount * transaction.exchangeRate;
-        break;
-    }
-
-    balances.total = +balances.total.toFixed(2);
-    balances.eur = +balances.eur.toFixed(2);
-    balances.usd = +balances.usd.toFixed(2);
-    balances.uyu = +balances.uyu.toFixed(2);
-  };
-
   transactions.forEach((transaction) => {
     switch (transaction.type) {
       case TransactionType.EXPENSE:
       case TransactionType.INSTALLMENTS:
-        getBalance(transaction, expenses);
+        calculateBalance(transaction, expenses);
         break;
       case TransactionType.INCOME:
-        getBalance(transaction, incomes);
+        calculateBalance(transaction, incomes);
         break;
       case TransactionType.SAVING:
-        getBalance(transaction, savings);
+        calculateBalance(transaction, savings);
         break;
     }
   });
@@ -396,7 +396,7 @@ async function setTransactionsInRedis(
   metadata: TransactionMetadata,
 ) {
   await redisClient.set(
-    `transaction:${userId}`,
+    `transactions:${userId}`,
     JSON.stringify(new TransactionsRedisMetadata(transactions, metadata)),
     {
       EX: 30 * 60 * 1000, // 30 min
@@ -407,7 +407,7 @@ async function setTransactionsInRedis(
 async function getBalanceTransactionInRedis(
   userId: string,
 ): Promise<TransactionsRedisMetadata<TransactionBalances>> {
-  const balance: string = await redisClient.get(`balance:${userId}`);
+  const balance: string = await redisClient.get(`balances:${userId}`);
 
   return JSON.parse(balance);
 }
@@ -418,12 +418,20 @@ async function setBalanceTransactionInRedis(
   metadata: TransactionMetadata,
 ) {
   await redisClient.set(
-    `balance:${userId}`,
+    `balances:${userId}`,
     JSON.stringify(new TransactionsRedisMetadata(transactions, metadata)),
     {
       EX: 30 * 60 * 1000, // 30 min
     },
   );
+}
+
+async function deleteTransactionsInRedis(userId: string) {
+  await redisClient.del(`transactions:${userId}`)
+}
+
+async function deleteBalanceTransactionInRedis(userId: string) {
+  await redisClient.del(`balances:${userId}`)
 }
 
 export const transactionService = {
@@ -433,6 +441,7 @@ export const transactionService = {
   getAllTrasactions,
   createTransactionByArray,
   getMonthsAndYears,
+  calculateBalance,
   calculateBalances,
   updateTransaction,
   getBalance,
@@ -441,4 +450,6 @@ export const transactionService = {
   setTransactionsInRedis,
   getBalanceTransactionInRedis,
   setBalanceTransactionInRedis,
+  deleteTransactionsInRedis,
+  deleteBalanceTransactionInRedis,
 };

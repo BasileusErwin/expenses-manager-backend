@@ -47,6 +47,9 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
 
     const transaction = await transactionService.createTransactionByArray(newTransaction);
 
+    await transactionService.deleteTransactionsInRedis(res.locals.userId);
+    await transactionService.deleteBalanceTransactionInRedis(res.locals.userId);
+
     res.send(new CustomResponse(true, transaction));
   } catch (err) {
     next(err);
