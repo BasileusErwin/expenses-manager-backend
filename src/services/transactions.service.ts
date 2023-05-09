@@ -427,11 +427,11 @@ async function setBalanceTransactionInRedis(
 }
 
 async function deleteTransactionsInRedis(userId: string) {
-  await redisClient.del(`transactions:${userId}`)
+  await redisClient.del(`transactions:${userId}`);
 }
 
 async function deleteBalanceTransactionInRedis(userId: string) {
-  await redisClient.del(`balances:${userId}`)
+  await redisClient.del(`balances:${userId}`);
 }
 
 export const transactionService = {

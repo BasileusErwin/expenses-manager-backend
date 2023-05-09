@@ -17,24 +17,4 @@ export class TransactionsRedisMetadata<T> implements RedisMetadata<T, Transactio
     this.object = object;
     this.metadata = metadata;
   }
-
-  public queryIsEqualToData(where: TransactionMetadata): boolean {
-    if (this?.metadata?.type !== where?.type) {
-      return false;
-    }
-
-    if (this?.metadata?.day !== where?.day) {
-      return false;
-    }
-
-    if (this?.metadata?.month !== where?.month) {
-      return false;
-    }
-
-    if (this?.metadata?.year !== where?.year) {
-      return false;
-    }
-
-    return true;
-  }
 }

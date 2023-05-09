@@ -93,7 +93,7 @@ async function getAllTransactionsByUserId(req: Request, res: Response, next: Nex
 
     const transationsInRedis = await transactionService.getTransactionsInRedis(where.userId);
 
-    if (transationsInRedis?.queryIsEqualToData(where)) {
+    if (transactionHelper.queryIsEqualToData(transationsInRedis, where)) {
       return res.send(new CustomResponse(true, transationsInRedis.object));
     }
 
@@ -120,10 +120,7 @@ async function getTransactionBalance(req: Request, res: Response, next: NextFunc
     const balanceInRedis: TransactionsRedisMetadata<TransactionBalances> =
       await transactionService.getBalanceTransactionInRedis(where.userId);
 
-    if (
-      balanceInRedis &&
-      new TransactionsRedisMetadata(balanceInRedis.object, balanceInRedis.metadata).queryIsEqualToData(where)
-    ) {
+    if (balanceInRedis && transactionHelper.queryIsEqualToData(balanceInRedis, where)) {
       return res.send(new CustomResponse(true, balanceInRedis.object));
     }
 

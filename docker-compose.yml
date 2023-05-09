@@ -1,37 +1,37 @@
-version: "3.9"
-
 services:
-  redis:
-    image: redis:7.0-alpine
-    container_name: expenses-redis
-    restart: always
-    ports:
-      - 6379:6379
-    command: redis-server --save 20 1 --loglevel warning
-    volumes:
-      - ./.redis:/data
-
-  postgres:
-    image: postgres:14-alpine
-    container_name: expenses-postgres
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: expenses
-    volumes:
-      - ./.postgres:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-
   expenses:
     build: .
+    command: sh -c "yarn dev"
     container_name: expenses-backend
-    working_dir: /app
-    env_file: ./.env
-    volumes:
-      - .:/app
-    ports:
-      - $PORT:$PORT
     depends_on:
       - postgres
       - redis
-    command: sh -c "yarn dev"
+    env_file: ./.env
+    ports:
+      - $PORT:$PORT
+    volumes:
+      - .:/app
+    working_dir: /app
+
+  postgres:
+    container_name: expenses-postgres
+    environment:
+      POSTGRES_DB: expenses
+      POSTGRES_PASSWORD: postgres
+    image: postgres:14-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./.postgres:/var/lib/postgresql/data
+
+  redis:
+    command: redis-server --save 20 1 --loglevel warning
+    container_name: expenses-redis
+    image: redis:7.0-alpine
+    ports:
+      - 6379:6379
+    restart: always
+    volumes:
+      - ./.redis:/data
+
+version: "3.9"

@@ -3,6 +3,9 @@ import { CreateTransactionRequest } from '../types/request/trsactions';
 import { ValidationError } from 'express-validator';
 import { dayHelper } from './day.helper';
 import { Request, Response } from 'express';
+import { TransactionMetadata, TransactionsRedisMetadata } from '../types/redis_types';
+import { TransactionDTO } from '../types/DTOs';
+import { TransactionBalances } from '../types/response/transactions';
 
 function createTransactionValidation(
   transactions: CreateTransactionRequest[],
@@ -147,7 +150,31 @@ function getQueryInGetTransaction(req: Request, { locals }: Response): Transacti
   return where;
 }
 
+function queryIsEqualToData(
+  object: TransactionsRedisMetadata<TransactionDTO[] | TransactionBalances>,
+  where: TransactionMetadata,
+): boolean {
+  if (object?.metadata?.type !== where?.type) {
+    return false;
+  }
+
+  if (object.metadata?.day !== where?.day) {
+    return false;
+  }
+
+  if (object.metadata?.month !== where?.month) {
+    return false;
+  }
+
+  if (object.metadata?.year !== where?.year) {
+    return false;
+  }
+
+  return true;
+}
+
 export const transactionHelper = {
   createTransactionValidation,
   getQueryInGetTransaction,
+  queryIsEqualToData,
 };
