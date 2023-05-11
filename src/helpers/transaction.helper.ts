@@ -154,6 +154,10 @@ function queryIsEqualToData(
   object: TransactionsRedisMetadata<TransactionDTO[] | TransactionBalances>,
   where: TransactionMetadata,
 ): boolean {
+  if (!object) {
+    return false
+  }
+
   if (object?.metadata?.type !== where?.type) {
     return false;
   }
