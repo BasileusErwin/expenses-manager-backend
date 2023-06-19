@@ -1,8 +1,8 @@
-import { Schema, Model, model } from "mongoose";
-import * as uuid from "uuid";
-import { CurrencyEnum } from "../../enums";
-import { mongoUtil } from "../../utils";
-import { ShoppingListModel } from "../../types/shopping_list";
+import { Schema, Model, model } from 'mongoose';
+import * as uuid from 'uuid';
+import { CurrencyEnum } from '../../enums';
+import { mongoUtil } from '../../utils';
+import { ShoppingListModel } from '../../types/shopping_list';
 
 const ShoppingListSchema = new Schema({
   _id: {
@@ -54,9 +54,6 @@ const ShoppingListSchema = new Schema({
 
 mongoUtil.applySoftDelete(ShoppingListSchema);
 
-const ShoppingList: Model<ShoppingListModel> = model<ShoppingListModel>(
-  "ShoppingList",
-  ShoppingListSchema
-);
+const ShoppingList: Model<ShoppingListModel> = model<ShoppingListModel>('ShoppingList', ShoppingListSchema);
 
 export { ShoppingList };
