@@ -1,6 +1,6 @@
 services:
   expenses:
-    build: .
+    image: node:18-alpine
     command: sh -c "yarn install && yarn test"
     container_name: expenses-test
     depends_on:
