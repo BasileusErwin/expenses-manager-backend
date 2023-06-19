@@ -1,6 +1,7 @@
 import { CurrencyEnum, MonthEnum, TransactionType } from '../enums';
 import { dayHelper } from '../helpers';
 import { body, query, param } from 'express-validator';
+import moment from 'moment';
 
 const createTransaction = [
   body('transactions', 'Please enter a transactions').if(body('type').not().exists()).isArray(),
@@ -24,7 +25,7 @@ const createTransaction = [
     .if(body('transactions').not().exists())
     .isIn(Object.values(MonthEnum))
     .trim(),
-  body('year', 'Please enter a year').if(body('transactions').not().exists()).isInt({ min: 2000 }).trim(),
+  body('year', 'Please enter a year').if(body('transactions').not().exists()).isInt({ min: 2000, max: moment().year() }).trim(),
   body('exchangeRate', 'Please enter a exchangeRate')
     .if(body('currency').custom((value) => value === CurrencyEnum.USD || value === CurrencyEnum.EUR))
     .isNumeric()

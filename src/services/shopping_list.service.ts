@@ -1,7 +1,7 @@
 import { CustomError, logger } from '../lib';
 import { ShoppingList } from '../mongo';
 import { ShoppingListItemModel, ShoppingListModel } from '../types/shopping_list';
-import { ApiError, MonthEnum, TransactionType } from '../enums';
+import { ApiError, CurrencyEnum, MonthEnum, TransactionType } from '../enums';
 import { TransactionDTO } from '../types/DTOs';
 import { transactionService } from './transactions.service';
 import { BodyRequest } from '../types/request/trsactions';
@@ -33,7 +33,7 @@ async function getShoppingListItemByListId(listId: string, userId: string): Prom
     userId,
   });
 
-  return list.items;
+  return list?.items;
 }
 
 async function checkShoppingListItem(listId: string, itemId: string, userId: string): Promise<void> {
@@ -104,6 +104,10 @@ async function getShoppingListItemById(itemId: string, userId: string): Promise<
     userId,
   });
 
+  logger.debug({
+    shoppingList,
+  });
+
   if (!shoppingList) {
     throw new CustomError(ApiError.ShoppingList.SHOPPING_LIST_NOT_EXIST);
   }
@@ -117,6 +121,7 @@ interface ExtraData {
   year: number;
   note: string;
   categoryId?: string;
+  exchangeRate?: number;
   category?: CategoryModel;
   goalId?: string;
 }
@@ -126,28 +131,30 @@ async function converShoppingListItemToTransaction(
   userId: string,
   extraData: ExtraData,
 ): Promise<TransactionDTO> {
-  const shoppingList = await ShoppingList.findOne({
-    'items.itemId': itemId,
-    userId,
-  });
-
-  if (!shoppingList) {
-    throw new CustomError(ApiError.ShoppingList.SHOPPING_LIST_ITEM_NOT_EXIST);
-  }
-
   const shoppingListItem = await getShoppingListItemById(itemId, userId);
+
+  if ([CurrencyEnum.USD, CurrencyEnum.EUR].includes(shoppingListItem.currency) && !extraData?.exchangeRate) {
+    throw new CustomError(ApiError.Server.PARAMS_REQUIRED, [
+      {
+        msg: 'Please enter an exchange rate',
+        param: 'exchangeRate',
+        value: extraData.exchangeRate,
+      },
+    ]);
+  }
 
   const createTransactionRequest: BodyRequest = {
     userId,
     amount: shoppingListItem.price,
     currency: shoppingListItem.currency,
     day: extraData.day ? extraData.day : null,
-    month: extraData.month
-      ? extraData.month
-      : Object.values(MonthEnum)[moment(shoppingListItem.createdAt).month()],
+    month: extraData.month,
     type: TransactionType.EXPENSE,
     year: extraData.year ? extraData.year : moment().year(),
     note: extraData.note ? extraData.note : shoppingListItem.name,
+    exchangeRate: [CurrencyEnum.USD, CurrencyEnum.EUR].includes(shoppingListItem.currency)
+      ? extraData.exchangeRate
+      : null,
     categoryId: extraData.categoryId,
     category: extraData.category,
   };
@@ -163,4 +170,5 @@ export const shoppingListService = {
   checkShoppingListItem,
   deleteShoppingList,
   deleteShoppingListItem,
+  converShoppingListItemToTransaction,
 };
