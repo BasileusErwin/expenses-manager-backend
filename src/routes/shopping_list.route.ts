@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { shoppingListValidation } from '../validations';
 import { middlewareController, shoppingListController } from '../controllers';
 
 const router: Router = Router();
@@ -8,7 +7,7 @@ router
   .route('/')
   .all(middlewareController.onlyLogin)
   .get(shoppingListController.getAllShoppingList)
-  .post(shoppingListValidation.createShoppingList, shoppingListController.createShoppingList);
+  .post(shoppingListController.createShoppingList);
 
 router
   .route('/:listId')
@@ -29,10 +28,6 @@ router
 router
   .route('/item/:itemId')
   .all(middlewareController.onlyLogin)
-  .post(
-    shoppingListValidation.convertShoppingListItemToTransaction,
-    shoppingListController.convertShoppingListItemToTransaction,
-  )
   .delete(shoppingListController.deleteShoppingListItem);
 
 export const shoppingListRouter: Router = router;

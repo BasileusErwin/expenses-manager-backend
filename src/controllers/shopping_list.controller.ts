@@ -25,6 +25,8 @@ async function createShoppingList(req: Request, res: Response, next: NextFunctio
 
       return res.send(new CustomResponse(true, list));
     }
+
+    // return res.send(new CustomResponse(true, list));
   } catch (err) {
     next(err);
   }
@@ -90,22 +92,6 @@ async function deleteShoppingListItem(req: Request, res: Response, next: NextFun
   }
 }
 
-async function convertShoppingListItemToTransaction(req: Request, res: Response, next: NextFunction) {
-  try {
-    validationHelper.checkValidation(req);
-
-    const transaction = await shoppingListService.converShoppingListItemToTransaction(
-      req.params.itemId,
-      res.locals.userId,
-      req.body,
-    );
-
-    return res.send(new CustomResponse(true, transaction));
-  } catch (err) {
-    next(err);
-  }
-}
-
 export const shoppingListController = {
   createShoppingList,
   getAllShoppingList,
@@ -114,5 +100,4 @@ export const shoppingListController = {
   checkShoppingListItem,
   deleteShoppingList,
   deleteShoppingListItem,
-  convertShoppingListItemToTransaction,
 };

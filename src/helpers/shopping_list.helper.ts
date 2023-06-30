@@ -55,7 +55,7 @@ function createShoppingListValidation(lists: ShoppingListModel[]): CustomValidat
         typeof item.exchangeRate !== 'number'
       ) {
         error.push({
-          msg: 'Please enter an exchange rate',
+          msg: `Please enter a currency: ${Object.values(CurrencyEnum).join('|')}`,
           param: `shoppingList[${index}].items[${indexItem}].exchangeRate`,
           value: item.exchangeRate,
         });
