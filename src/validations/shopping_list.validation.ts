@@ -4,8 +4,9 @@ import { dayHelper } from '../helpers';
 import { CurrencyEnum, MonthEnum, TransactionType } from '../enums';
 
 const createShoppingList = [
-  body('items', 'Please enter a item').isArray(),
-  body('name', 'Please enter a name').isString(),
+  body('shoppingList', 'Please enter a shopping list').if(body('type').not().exists()).isArray(),
+  body('items', 'Please enter a item').if(body('type').not().exists()).isArray(),
+  body('name', 'Please enter a name').if(body('type').not().exists()),
 ];
 
 const shoppingListIdInParam = [param('itemId').isUUID()];
