@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { shoppingListHelper, validationHelper } from '../helpers';
-import { CustomError, CustomResponse, logger } from '../lib';
+import { CustomError, CustomResponse } from '../lib';
 import { ApiError } from '../enums';
 import { shoppingListService } from '../services';
 import { ShoppingListModel } from '../types/shopping_list';
@@ -8,7 +8,6 @@ import { ShoppingListModel } from '../types/shopping_list';
 async function createShoppingList(req: Request, res: Response, next: NextFunction) {
   try {
     validationHelper.checkValidation(req);
-    logger.debug(req.body);
 
     const { shippingLists } = req.body;
 
