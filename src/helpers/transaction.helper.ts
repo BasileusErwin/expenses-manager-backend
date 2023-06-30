@@ -154,27 +154,13 @@ function queryIsEqualToData(
   object: TransactionsRedisMetadata<TransactionDTO[] | TransactionBalances>,
   where: TransactionMetadata,
 ): boolean {
-  if (!object) {
-    return false
-  }
-
-  if (object?.metadata?.type !== where?.type) {
-    return false;
-  }
-
-  if (object.metadata?.day !== where?.day) {
-    return false;
-  }
-
-  if (object.metadata?.month !== where?.month) {
-    return false;
-  }
-
-  if (object.metadata?.year !== where?.year) {
-    return false;
-  }
-
-  return true;
+  return (
+    object?.metadata &&
+    object.metadata.type === where?.type &&
+    object.metadata.day === where?.day &&
+    object.metadata.month === where?.month &&
+    object.metadata.year === where?.year
+  );
 }
 
 export const transactionHelper = {

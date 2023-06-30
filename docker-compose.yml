@@ -22,8 +22,20 @@ services:
     ports:
       - 5432:5432
 
+  mongo:
+    image: mongo:7.0-rc
+    restart: unless-stopped
+    container_name: expenses-mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./.mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=mongo
+
   expenses:
-    build: .
+    image: node:18-alpine
     container_name: expenses-backend
     working_dir: /app
     env_file: ./.env
@@ -34,4 +46,5 @@ services:
     depends_on:
       - postgres
       - redis
+      - mongo
     command: sh -c "yarn install && yarn dev"
