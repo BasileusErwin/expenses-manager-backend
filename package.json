@@ -9,7 +9,8 @@
     "start": "NODE_PATH=dist/src/ node dist/src/server.js",
     "test": "env $(cat .env.test | grep -v '#' | xargs) ENV=test jest --verbose --colors --coverage --detectOpenHandles --forceExit --runInBand",
     "lint": "yarn rome check {src/,test/}/**/*.ts",
-    "format": "yarn rome format --write --config-path=. {src/,test/}**/*.ts"
+    "format": "yarn rome format --write --config-path=. {src/,test/}**/*.ts",
+    "postinstall": "husky install"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
