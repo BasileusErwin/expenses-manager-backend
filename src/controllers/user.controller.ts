@@ -30,7 +30,11 @@ async function getUserById(_req: Request, res: Response, next: NextFunction) {
       throw new CustomError(ApiError.Server.TOO_FEW_PARAMS);
     }
 
-    const user = await userService.getUser({ userId }, []);
+    const user = await userService.getUser({ userId }, [
+      {
+        model: TransactionModel,
+      },
+    ]);
 
     return res.send(new CustomResponse(true, user));
   } catch (err) {

@@ -15,6 +15,7 @@ describe('/api/cateogries', () => {
   const categoryHelper: CategoryHelper = new CategoryHelper(request, userHelper.cookieMock);
 
   beforeAll(async () => {
+    await app.connectToDatabase();
     await databaseHelper.destoryDatabase();
     await userHelper.createUserFromCSV();
 

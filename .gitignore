@@ -17,6 +17,5 @@ dist
 
 .postgres
 .redis
-.mongo
 
 coverage

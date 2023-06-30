@@ -12,7 +12,6 @@ import { sequelize } from './models';
 import { ApiError } from './enums';
 import { customErrors, CustomError, CustomResponse, logger } from './lib';
 import { redisKeyLifetime, redisStore } from './redis';
-import { connectMongoDatabase } from './mongo';
 
 const exceptionMiddleware = <T extends Error>(err: T, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof CustomError) {
@@ -45,7 +44,6 @@ export class App {
   public async connectToDatabase() {
     try {
       await sequelize().authenticate();
-      await connectMongoDatabase();
     } catch (error) {
       logger.error(error, 'database_connection_failed');
       throw error;
@@ -64,10 +62,7 @@ export class App {
     this.server.use(bodyParser.json());
     this.server.use(bodyParser.urlencoded({ extended: true }));
     this.server.use(helmet());
-    this.server.use(cors({
-      origin: config.corsOrigins,
-      credentials: true
-    }));
+    this.server.use(cors());
 
     this.server.use(
       session({
@@ -77,7 +72,6 @@ export class App {
         secret: config.sessionSecret,
         name: 'sessionID',
         cookie: {
-          httpOnly: !['LOCAL', 'TEST'].includes(config.env),
           maxAge: redisKeyLifetime,
         },
       }),

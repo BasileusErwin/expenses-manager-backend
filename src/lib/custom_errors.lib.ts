@@ -180,22 +180,4 @@ customErrors[ApiError.FinancialGoal.FINANCIAL_GOAL_NOT_EXIST] = {
   HTTPStatusCode: StatusCodes.NOT_FOUND,
 };
 
-customErrors[ApiError.ShoppingList.SHOPPING_LIST_ITEM_NOT_EXIST] = {
-  message: 'The item on the shopping list does not exist.',
-  showMessage: {
-    EN: 'The item on the shopping list does not exist.',
-    ES: 'El artículo de la lista de la compra no existe.',
-  },
-  HTTPStatusCode: StatusCodes.NOT_FOUND,
-};
-
-customErrors[ApiError.ShoppingList.SHOPPING_LIST_NOT_EXIST] = {
-  message: 'The shopping list does not exist.',
-  showMessage: {
-    EN: 'The shopping list does not exist.',
-    ES: 'La lista de la compra no existe.',
-  },
-  HTTPStatusCode: StatusCodes.NOT_FOUND,
-};
-
 export { customErrors };

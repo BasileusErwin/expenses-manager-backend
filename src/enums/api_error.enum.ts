@@ -41,10 +41,4 @@ export namespace ApiError {
     GENERIC = 6000,
     FINANCIAL_GOAL_NOT_EXIST = 6001,
   }
-
-  export enum ShoppingList {
-    GENERIC = 7000,
-    SHOPPING_LIST_NOT_EXIST = 7001,
-    SHOPPING_LIST_ITEM_NOT_EXIST = 7002,
-  }
 }
