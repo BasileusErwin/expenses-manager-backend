@@ -12,6 +12,7 @@ const getMaxDayByMonth = (month: MonthEnum): Number => {
     case MonthEnum.JANUARY:
     case MonthEnum.MARCH:
     case MonthEnum.MAY:
+    case MonthEnum.JULY:
     case MonthEnum.AUGUST:
     case MonthEnum.OCTOBER:
     case MonthEnum.DECEMBER:
